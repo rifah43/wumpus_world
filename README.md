@@ -8,41 +8,41 @@
 ### Note: Rules are same as static wumpus game with one exception: there will be no evlution of best path
 
 
+<br><br>
 
 
 ##  Algorithm for AI Agent
 To implement the AI agent here we will implement Propositional Logic. Our knowledge base will be a multidimantion array of object, where the object will hold some knowledge and that knowledge will updated after each move.
 
 ### some terminology
-OK(xy) = the position (x,y) is safe for the agent
-P(xy) = There is Pit in position (x,y)
-W(xy) = There is Wumpus in position (x,y)
-G(xy) = There is Gold in position (x,y)
-B(xy) = There is Stench in position (x,y)
-S(xy) = There is Stench in position (x,y)
+OK(xy) = the position (x,y) is safe for the agent<br>
+P(xy) = There is Pit in position (x,y)<br>
+W(xy) = There is Wumpus in position (x,y)<br>
+G(xy) = There is Gold in position (x,y)<br>
+B(xy) = There is Stench in position (x,y)<br>
+S(xy) = There is Stench in position (x,y)<br>
 
 algo:
 1. Set a 10x10 array with a object. The Object will hold:
-    i.      noWumpus: null
-    ii.     noPit: null
-    iii.    maybeWumpus: null
-    iv.     maybePit: null
-    v.      breeze: null
-    vi.     stench: null
-    vii.    safe: null
+    i.      noWumpus: null<br>
+    ii.     noPit: null<br>
+    iii.    maybeWumpus: null<br>
+    iv.     maybePit: null<br>
+    v.      breeze: null<br>
+    vi.     stench: null<br>
+    vii.    safe: null<br>
 
 2. Push (1,1) in nextVisitableSquare (a queue) as next visitable squere where agent can visit by visiting multiple squere.
 3. Defile a array path= []
-3. While nextVisitableSquare is not null:
-4.      pop a squere (x,y) and check the following conditions.
-5.      Go to that index and store the moves into path.
+3. While nextVisitableSquare is not null do 4-8:
+4. pop a squere (x,y) and check the following conditions.
+5. Go to that index and store the moves into path.
 
-6.      if ~S(x,y) set (x,y+1), (x,y-1), (x+1,y), (x-1,y) = no wuppus.
-        [~S(xy) <=> ~W(xy) ^ ~W(xy+1) ^ ~W(xy-1) ^ ~W(x-1y) ^ ~W(x+1y)]
+6. if ~S(x,y) set (x,y+1), (x,y-1), (x+1,y), (x-1,y) = no wuppus.
+[~S(xy) <=> ~W(xy) ^ ~W(xy+1) ^ ~W(xy-1) ^ ~W(x-1y) ^ ~W(x+1y)]
 
-7.      if ~B(x,y) set (x,y+1), (x,y-1), (x+1,y), (x-1,y) = no Pit.
-        [~B(xy) <=> ~P(xy) ^ ~P(xy+1) ^ ~P(xy-1) ^ ~P(x-1y) ^ ~P(x+1y)]
+7. if ~B(x,y) set (x,y+1), (x,y-1), (x+1,y), (x-1,y) = no Pit.
+[~B(xy) <=> ~P(xy) ^ ~P(xy+1) ^ ~P(xy-1) ^ ~P(x-1y) ^ ~P(x+1y)]
 
-8.      Now check if any squere (xy) is both "no wumpus" & "no pit", if then push it into the nextVisitableSquare queue.
-
+8. Now check if any squere (xy) is both "no wumpus" & "no pit", if then push it into the nextVisitableSquare queue.
 9. Print the path. 
