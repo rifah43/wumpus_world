@@ -1,9 +1,33 @@
-const { WUMPUS, PIT, AGENT, GOLD, CAVE_LENGTH, CAVE_WIDTH } = require('./constants.js')
+const { WUMPUS, PIT, AGENT, GOLD, CAVE_LENGTH, CAVE_WIDTH, STENCH, BREEZE } = require('./constants.js')
 
+
+function addPerceivation(cave) {
+    let newCave = [];
+    for(let i=0;i<CAVE_LENGTH;i++) {
+        let tempRow = []
+        for(let j=0;j<CAVE_WIDTH;j++) {
+            let temp = [];
+            if (isWumpusInAdj(cave, i, j)) {
+                temp.push(STENCH);
+            }
+            if (isPitInAdj(cave, i, j)) {
+                temp.push(BREEZE);
+            }
+            if(cave[i][j] == GOLD){
+                temp.push(GOLD);
+            }
+
+            tempRow.push(temp);
+        }
+        newCave.push(tempRow);
+    }
+    newCave[0][0] = [AGENT];
+    return newCave;
+}
 
 
 function initialize() {
-    const cave = [
+    let cave = [
         [AGENT, null, WUMPUS, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null, WUMPUS, null],
         [PIT, null, WUMPUS, null, PIT, null, GOLD, null, null, null],
@@ -14,21 +38,18 @@ function initialize() {
         [null, PIT, null, null, null, null, null, null, null, null],
         [null, null, null, GOLD, null, null, null, GOLD, null, null],
         [null, null, null, null, null, PIT, null, null, PIT, null]
-    ]
-    return cave
+    ];
+
+    // return cave
+    return addPerceivation(cave);
 }
 
 function printCave(cave) {
-    const NULL = "nul";
     for (let i = 0; i < CAVE_LENGTH; i++) {
         let line = '';
         for (let j = 0; j < CAVE_WIDTH; j++) {
-            if (cave[i][j] == null) {
-                line = line + NULL.padEnd(8, " ");
-            }
-            else {
-                line = line + String(cave[i][j]).padEnd(8, " ");
-            }
+            let element = "[" + String(cave[i][j]) + "]"
+            line = line + element.padEnd(15, " ");
         }
         console.log(line);
     }
@@ -60,42 +81,6 @@ function isPitInAdj(cave, i, j) {
         return false;
 }
 
-function printCaveWithPerceivation(cave) {
-    const NULL = "nul";
-    for (let i = 0; i < CAVE_LENGTH; i++) {
-        let line = '';
-        for (let j = 0; j < CAVE_WIDTH; j++) {
-            let tempString= '[';
-            let temp = false;
-
-            if (isWumpusInAdj(cave, i, j)) {
-                tempString = tempString + WUMPUS;
-                temp = true;
-            }
-            if (isPitInAdj(cave, i, j)) {
-                if(temp) tempString += ','
-                tempString = tempString + PIT;
-                temp = true;
-            }
-
-            if (cave[i][j] == null) {
-                if (!temp) {
-                    tempString = tempString + NULL;
-                }
-            }
-            else {
-                if(temp) tempString += ','
-                tempString = tempString + String(cave[i][j]);
-            }
-
-            tempString += ']';
-            line += tempString.padEnd(15, " ");
-        }
-        console.log(line);
-    }
-    console.log();
-}
-
 module.exports = {
-    printCave, printCaveWithPerceivation, initialize, isPitInAdj, isWumpusInAdj
+    printCave, initialize, isPitInAdj, isWumpusInAdj
 }
