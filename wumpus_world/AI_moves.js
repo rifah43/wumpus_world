@@ -51,11 +51,20 @@ function printCave(knowledgeBase) {
 }
 
 function updateKnowledgeBase(knowledgeBase, cave, pY, pX) {
-
     let isBreeze= false, isStench = false;
-    if(cave[pY][pX].includes(constants.BREEZE)) isBreeze = true;
-    if(cave[pY][pX].includes(constants.STENCH)) isStench = true;
+    if(cave[pY][pX].includes(constants.BREEZE)){
+        knowledgeBase[pY][pX].breeze = true;
+        isBreeze = true;
+    }
+    else knowledgeBase[pY][pX].breeze = false;
 
+    if(cave[pY][pX].includes(constants.STENCH)){
+        knowledgeBase[pY][pX].stench = true;
+        isStench = true;
+    }
+    else knowledgeBase[pY][pX].stench = true;
+
+    // Setting that is there may Pit in adcient room or not
     if (pY > 0 && knowledgeBase[pY - 1][pX].maybePit != false){
         knowledgeBase[pY - 1][pX].maybePit = isBreeze;
     }
@@ -69,7 +78,7 @@ function updateKnowledgeBase(knowledgeBase, cave, pY, pX) {
         knowledgeBase[pY][pX + 1].maybePit = isBreeze;
     }
 
-
+    // Setting that is there may Wumpus in adcient room or not
     if (pY > 0 && knowledgeBase[pY - 1][pX].maybeWumpus != false){
         knowledgeBase[pY - 1][pX].maybeWumpus = isStench;
     }
@@ -83,7 +92,74 @@ function updateKnowledgeBase(knowledgeBase, cave, pY, pX) {
         knowledgeBase[pY][pX + 1].maybeWumpus = isStench;
     }
 
+
+    // Setting that is there may Wumpus in adcient room or not
+    for (let i = 0; i < constants.CAVE_LENGTH; i++) {
+        for (let j = 0; j < constants.CAVE_WIDTH; j++) {
+            if(knowledgeBase[i][j].safe == true) continue;
+
+            else if (knowledgeBase[i][j].maybePit == false && knowledgeBase[i][j].maybeWumpus == false) {
+                knowledgeBase[i][j].noWumpus = true;
+                knowledgeBase[i][j].noPit = true;
+                knowledgeBase[i][j].safe = true;
+            }
+            else if (isThere) {
+                knowledgeBase[i][j].noWumpus = true;
+                knowledgeBase[i][j].noPit = true;
+                knowledgeBase[i][j].safe = true;
+            }
+        }
+    }
+
     return knowledgeBase;
+}
+
+function isThereWumpus(knowledgeBase, pY, pX) {
+    let isThereWum = false; 
+    if(
+        (pY <= 0 || knowledgeBase[pY-1][pX].stench == true) &&
+        (pY+1 >= constants.CAVE_LENGTH || knowledgeBase[pY+1][pX].stench == true) &&
+        (pX <= 0 || knowledgeBase[pY][pX-1].stench == true) &&
+        (pX+1 >= constants.CAVE_WIDTH || knowledgeBase[pY][pX+1].stench == true)
+    ) isThereWum = true;
+    
+    else if(
+        // if in the upper room feels stench and that's upper, left, right sure that there is no wumpus 
+        (pY > 0 && knowledgeBase[pY-1][pX].stench == true) &&
+        (pY <= 1 || knowledgeBase[pY-2][pX].maybeWumpus == false) &&
+        (pX <= 0 || knowledgeBase[pY-1][pX-1].maybeWumpus == false) &&
+        (pX+1 >= constants.CAVE_WIDTH || knowledgeBase[pY-1][pX+1].maybeWumpus == false)
+    ) isThereWum = true;
+
+    else if(
+        // if in the down room feels stench and that's down, left, right sure that there is no wumpus 
+        (pY+1 < constants.CAVE_LENGTH && knowledgeBase[pY+1][pX].stench == true) &&
+        (pY+2 >= constants.CAVE_LENGTH || knowledgeBase[pY+2][pX].maybeWumpus == false) &&
+        (pX <= 0 || knowledgeBase[pY+1][pX-1].maybeWumpus == false) &&
+        (pX+1 >= constants.CAVE_WIDTH || knowledgeBase[pY+1][pX+1].maybeWumpus == false)
+    ) isThereWum = true;
+
+
+
+    else if(
+        // if in the left room feels stench and that's up, down, left sure that there is no wumpus 
+        (pX > 0 && knowledgeBase[pY][pX-1].stench == true) &&
+        (pX <= 1 || knowledgeBase[pY][pX-2].maybeWumpus == false) &&
+        (pY <= 0 || knowledgeBase[pY-1][pX-1].maybeWumpus == false) &&
+        (pY+1 >= constants.CAVE_LENGTH || knowledgeBase[pY+1][pX-1].maybeWumpus == false)
+    ) isThereWum = true;
+
+    else if(
+        // if in the right room feels stench and that's up, down, right sure that there is no wumpus 
+        (pX+1 < constants.CAVE_WIDTH && knowledgeBase[pY][pX+1].stench == true) &&
+        (pX+2 >= constants.CAVE_WIDTH || knowledgeBase[pY][pX+2].maybeWumpus == false) &&
+        (pY <= 0 || knowledgeBase[pY-1][pX+1].maybeWumpus == false) &&
+        (pY+1 >= constants.CAVE_LENGTH || knowledgeBase[pY+1][pX+1].maybeWumpus == false)
+    ) isThereWum = true;
+
+    else isThereWum = false;
+
+    return isThereWum;
 }
 
 function getUpdatedAllVisiableSquare(knowledgeBase, nextVisitableSquare) {
