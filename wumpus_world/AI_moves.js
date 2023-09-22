@@ -154,6 +154,7 @@ function killTheWumpus(pY, pX) {
 
 function isThereWumpus(pY, pX) {
     if (pY >= constants.CAVE_LENGTH || pY < 0 || pX >= constants.CAVE_WIDTH || pX < 0 || knowledgeBase[pY][pX].safe == true) return false;
+
     let isThereWum = false;
     if (
         (pY <= 0 || knowledgeBase[pY - 1][pX].stench == true) &&
@@ -294,7 +295,7 @@ async function AI_move_By_Propositional_logic(cave) {
     add_as_safe_visitable_square(0, 0);             // as (1,1) is the current position of agent and it is safe
     let currentPositionY = 0, currentPositionX = 0;
 
-    i = 0;
+    // i = 0;
     while (total_new_visitable_squere() > 0) {
         let temp = get_next_visitable_squere();
         let nextPositionY = temp.y, nextPositionX = temp.x;
@@ -322,7 +323,7 @@ async function AI_move_By_Propositional_logic(cave) {
 }
 
 AI_move_By_Propositional_logic(caveBoard.initialize())
-caveBoard.printCave(cave)
+// caveBoard.printCave(cave)
 // caveBoard.printCave(caveBoard.initialize())
-printCave();
+// printCave();
 
