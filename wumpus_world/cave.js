@@ -16,6 +16,12 @@ function addPerceivation(cave) {
             if(cave[i][j] == GOLD){
                 temp.push(GOLD);
             }
+            if(cave[i][j] == WUMPUS){
+                temp.push(WUMPUS);
+            }
+            if(cave[i][j] == PIT){
+                temp.push(PIT);
+            }
 
             tempRow.push(temp);
         }

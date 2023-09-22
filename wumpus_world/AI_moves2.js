@@ -2,6 +2,26 @@ const constants = require('./constants.js');
 const caveBoard = require('./cave.js')
 
 let knowledgeBase = null, cave = null;
+let nextVisitableSquare = [];
+
+function add_as_safe_visitable_square(positionY, positionX) {
+    try {
+        nextVisitableSquare.push({ y: positionY, x: positionX });
+        return true;
+    }
+    catch (error) {
+        return false;
+    }
+}
+
+function get_next_visitable_squere() {
+    if (nextVisitableSquare.length > 0) return nextVisitableSquare.pop();
+    else null;
+}
+
+function total_new_visitable_squere() {
+    return nextVisitableSquare.length;
+}
 
 function initializeCave(caveBoard) {
     cave = caveBoard;
@@ -36,12 +56,11 @@ function initializeKnowledgeBase() {
         breeze: false,
         stench: false,
         safe: true,
-        visited: false
+        visited: true
     }
 
     knowledgeBase = tempKnowledgeBase;
 }
-
 
 function printCave() {
     for (let i = 0; i < 6; i++) {
@@ -58,83 +77,12 @@ function printCave() {
     console.log();
 }
 
-function updateKnowledgeBase(pY, pX) {
-    console.log(pY,pX, knowledgeBase[1][0])
-    let isBreeze, isStench;
-    if (cave[pY][pX].includes(constants.BREEZE)) {
-        knowledgeBase[pY][pX].breeze = true;
-        isBreeze = true;
-    }
-    else {
-        knowledgeBase[pY][pX].breeze = false;
-        isBreeze = false;
-    }
-
-    if (cave[pY][pX].includes(constants.STENCH)) {
-        knowledgeBase[pY][pX].stench = true;
-        isStench = true;
-    }
-    else {
-        knowledgeBase[pY][pX].stench = false;
-        isStench = false;
-    }
-
-
-    // Setting that is there may Pit in adcient room or not
-    if (pY > 0 && knowledgeBase[pY - 1][pX].maybePit != false) {
-        knowledgeBase[pY - 1][pX].maybePit = isBreeze;
-    }
-    if (pY < constants.CAVE_LENGTH - 1 && knowledgeBase[pY + 1][pX].maybePit != false) {
-        knowledgeBase[pY + 1][pX].maybePit = isBreeze;
-    }
-    if (pX > 0 && knowledgeBase[pY][pX - 1].maybePit != false) {
-        knowledgeBase[pY][pX - 1].maybePit = isBreeze;
-    }
-    if (pX < constants.CAVE_WIDTH - 1 && knowledgeBase[pY][pX + 1].maybePit != false) {
-        knowledgeBase[pY][pX + 1].maybePit = isBreeze;
-    }
-
-    // Setting that is there may Wumpus in adcient room or not
-    if (pY > 0 && knowledgeBase[pY - 1][pX].maybeWumpus != false) {
-        knowledgeBase[pY - 1][pX].maybeWumpus = isStench;
-    }
-    if (pY < constants.CAVE_LENGTH - 1 && knowledgeBase[pY + 1][pX].maybeWumpus != false) {
-        knowledgeBase[pY + 1][pX].maybeWumpus = isStench;
-    }
-    if (pX > 0 && knowledgeBase[pY][pX - 1].maybeWumpus != false) {
-        knowledgeBase[pY][pX - 1].maybeWumpus = isStench;
-    }
-    if (pX < constants.CAVE_WIDTH - 1 && knowledgeBase[pY][pX + 1].maybeWumpus != false) {
-        knowledgeBase[pY][pX + 1].maybeWumpus = isStench;
-    }
-
-    // Setting that is there may Wumpus in adcient room or not
-    for (let i = 0; i < constants.CAVE_LENGTH; i++) {
-        for (let j = 0; j < constants.CAVE_WIDTH; j++) {
-            if (knowledgeBase[i][j].safe != null) continue;
-
-            else if (knowledgeBase[i][j].maybePit == false && knowledgeBase[i][j].maybeWumpus == false) {
-                knowledgeBase[i][j].noWumpus = true;
-                knowledgeBase[i][j].noPit = true;
-                knowledgeBase[i][j].safe = true;
-            }
-            else if (isThereWumpus(i, j)) {
-                console.log("Killing The Wumpus at (",i,j,")");
-                killTheWumpus(i,j)
-            }
-            else if (isTherePit(i, j)) {
-                knowledgeBase[i][j].noWumpus = true;
-                knowledgeBase[i][j].noPit = false;
-                knowledgeBase[i][j].safe = false;
-                knowledgeBase[i][j].breeze = true;
-                knowledgeBase[i][j].maybePit = true;
-                knowledgeBase[i][j].maybeWumpus = false;
-            }
-        }
-    }
+function killTheWumpus(pY, pX) {
+    removeWumpusFrom_Cave(pY, pX);
+    removeWumpusFrom_KnowledgeBase(pY, pX)
 }
 
-function killTheWumpus(pY, pX) {
+function removeWumpusFrom_KnowledgeBase(pY, pX) {
     knowledgeBase[pY][pX].noWumpus = true;
     knowledgeBase[pY][pX].noPit = true;
     knowledgeBase[pY][pX].safe = true;
@@ -152,7 +100,7 @@ function killTheWumpus(pY, pX) {
 
     if (
         // if in the down room feels stench and that's down, left, right sure that there is no wumpus 
-        (pY + 1 < constants.CAVE_LENGTH)&&
+        (pY + 1 < constants.CAVE_LENGTH) &&
         (pY + 2 >= constants.CAVE_LENGTH || knowledgeBase[pY + 2][pX].maybeWumpus == false) &&
         (pX <= 0 || knowledgeBase[pY + 1][pX - 1].maybeWumpus == false) &&
         (pX + 1 >= constants.CAVE_WIDTH || knowledgeBase[pY + 1][pX + 1].maybeWumpus == false)
@@ -160,7 +108,7 @@ function killTheWumpus(pY, pX) {
 
     if (
         // if in the left room feels stench and that's up, down, left sure that there is no wumpus 
-        (pX > 0)&&
+        (pX > 0) &&
         (pX <= 1 || knowledgeBase[pY][pX - 2].maybeWumpus == false) &&
         (pY <= 0 || knowledgeBase[pY - 1][pX - 1].maybeWumpus == false) &&
         (pY + 1 >= constants.CAVE_LENGTH || knowledgeBase[pY + 1][pX - 1].maybeWumpus == false)
@@ -168,12 +116,41 @@ function killTheWumpus(pY, pX) {
 
     if (
         // if in the right room feels stench and that's up, down, right sure that there is no wumpus 
-        (pX + 1 < constants.CAVE_WIDTH)&&
+        (pX + 1 < constants.CAVE_WIDTH) &&
         (pX + 2 >= constants.CAVE_WIDTH || knowledgeBase[pY][pX + 2].maybeWumpus == false) &&
         (pY <= 0 || knowledgeBase[pY - 1][pX + 1].maybeWumpus == false) &&
         (pY + 1 >= constants.CAVE_LENGTH || knowledgeBase[pY + 1][pX + 1].maybeWumpus == false)
     ) knowledgeBase[pY][pX + 1].stench == false;
 }
+
+function isAnotherWumpusInAdj(positionY, positionX) {
+    let temp = [];
+
+    if (positionY > 0 && cave[positionY - 1][positionX] == constants.WUMPUS) temp.push(positionY - 1, positionX);
+    if (positionY + 1 < constants.CAVE_LENGTH && cave[positionY + 1][positionX] == constants.WUMPUS) temp.push(positionY + 1, positionX);
+    if (positionX > 0 && cave[positionY][positionX - 1] == constants.WUMPUS) temp.push(positionY, positionX - 1);
+    if (positionX + 1 < constants.CAVE_WIDTH && cave[positionY][positionX - 1] == constants.WUMPUS) temp.push(positionY, positionX + 1);
+
+    if (temp.length>1)
+        return true;
+    else
+        return false;
+}
+
+function removeWumpusFrom_Cave(pY, pX) {
+
+    cave[pY][pX] = cave[pY][pX].filter(item => item !== constants.WUMPUS);
+
+    if (pY > 0 && !isAnotherWumpusInAdj(pY - 1, pX))
+        cave[pY - 1][pX] = cave[pY - 1][pX].filter(item => item !== constants.STENCH);
+    if (pY + 1 < constants.CAVE_LENGTH && !isAnotherWumpusInAdj(pY + 1, pX))
+        cave[pY + 1][pX] = cave[pY + 1][pX].filter(item => item !== constants.STENCH);
+    if (pX > 0 && !isAnotherWumpusInAdj(pY, pX-1))
+        cave[pY][pX - 1] = cave[pY][pX - 1].filter(item => item !== constants.STENCH);
+    if (pX + 1 < constants.CAVE_WIDTH && !isAnotherWumpusInAdj(pY, pX+1))
+        cave[pY][pX + 1] = cave[pY][pX + 1].filter(item => item !== constants.STENCH);
+}
+
 
 function isThereWumpus(pY, pX) {
     let isThereWum = false;
@@ -268,19 +245,81 @@ function isTherePit(pY, pX) {
     return isPit;
 }
 
-function getUpdatedAllVisiableSquare(nextVisitableSquare) {
+
+function updateKnowledgeBase(pY, pX) {
+    let isBreeze, isStench;
+    if (cave[pY][pX].includes(constants.BREEZE)) {
+        knowledgeBase[pY][pX].breeze = true;
+        isBreeze = true;
+    }
+    else {
+        knowledgeBase[pY][pX].breeze = false;
+        isBreeze = false;
+    }
+
+    if (cave[pY][pX].includes(constants.STENCH)) {
+        knowledgeBase[pY][pX].stench = true;
+        isStench = true;
+    }
+    else {
+        knowledgeBase[pY][pX].stench = false;
+        isStench = false;
+    }
+
+
+    // Setting that is there may Pit in adcient room or not
+    if (pY > 0 && knowledgeBase[pY - 1][pX].maybePit != false) {
+        knowledgeBase[pY - 1][pX].maybePit = isBreeze;
+    }
+    if (pY < constants.CAVE_LENGTH - 1 && knowledgeBase[pY + 1][pX].maybePit != false) {
+        knowledgeBase[pY + 1][pX].maybePit = isBreeze;
+    }
+    if (pX > 0 && knowledgeBase[pY][pX - 1].maybePit != false) {
+        knowledgeBase[pY][pX - 1].maybePit = isBreeze;
+    }
+    if (pX < constants.CAVE_WIDTH - 1 && knowledgeBase[pY][pX + 1].maybePit != false) {
+        knowledgeBase[pY][pX + 1].maybePit = isBreeze;
+    }
+
+    // Setting that is there may Wumpus in adcient room or not
+    if (pY > 0 && knowledgeBase[pY - 1][pX].maybeWumpus != false) {
+        knowledgeBase[pY - 1][pX].maybeWumpus = isStench;
+    }
+    if (pY < constants.CAVE_LENGTH - 1 && knowledgeBase[pY + 1][pX].maybeWumpus != false) {
+        knowledgeBase[pY + 1][pX].maybeWumpus = isStench;
+    }
+    if (pX > 0 && knowledgeBase[pY][pX - 1].maybeWumpus != false) {
+        knowledgeBase[pY][pX - 1].maybeWumpus = isStench;
+    }
+    if (pX < constants.CAVE_WIDTH - 1 && knowledgeBase[pY][pX + 1].maybeWumpus != false) {
+        knowledgeBase[pY][pX + 1].maybeWumpus = isStench;
+    }
+
+    // Setting that is there may Wumpus in adcient room or not
     for (let i = 0; i < constants.CAVE_LENGTH; i++) {
         for (let j = 0; j < constants.CAVE_WIDTH; j++) {
-            if (knowledgeBase[i][j].safe == true && knowledgeBase[i][j].visited != true) {
-                knowledgeBase[i][j].visited = true;
-                nextVisitableSquare.push({ y: i, x: j })
+
+            if (knowledgeBase[i][j].safe != null) continue;
+            else if (knowledgeBase[i][j].maybePit == false && knowledgeBase[i][j].maybeWumpus == false) {
+                knowledgeBase[i][j].noWumpus = true;
+                knowledgeBase[i][j].noPit = true;
+                knowledgeBase[i][j].safe = true;
+                add_as_safe_visitable_square(i, j);
+            }
+            else if (isThereWumpus(i, j)) {
+                console.log("Killing The Wumpus at (", i, j, ")");
+                killTheWumpus(i, j)
+            }
+            else if (isTherePit(i, j)) {
+                knowledgeBase[i][j].noWumpus = true;
+                knowledgeBase[i][j].noPit = false;
+                knowledgeBase[i][j].safe = false;
+                knowledgeBase[i][j].breeze = true;
+                knowledgeBase[i][j].maybePit = true;
+                knowledgeBase[i][j].maybeWumpus = false;
             }
         }
     }
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function AI_move_By_Propositional_logic(cave) {
@@ -288,39 +327,33 @@ async function AI_move_By_Propositional_logic(cave) {
     let moveList = [];
     initializeKnowledgeBase();
     initializeCave(cave);
-    printCave()
-    console.log(knowledgeBase[1][0])
 
-    // let nextVisitableSquare = [];
+    add_as_safe_visitable_square(0, 0);             // as (1,1) is the current position of agent and it is safe
+    let currentPositionY = 0, currentPositionX = 0;
 
-    // // Defining the starting position (1,1)
-    // let cpY = 0, cpX = 0;
+    while (total_new_visitable_squere() > 0) {
+        let temp = get_next_visitable_squere();
+        let nextPositionY = temp.y, nextPositionX = temp.x;
 
-    // let i = 0;
-    // nextVisitableSquare.push({ y: 0, x: 0 });       // as (1,1) is the current position of agent and it is safe
-    // knowledgeBase[0][0].visited = true;
-    // while (nextVisitableSquare != null && nextVisitableSquare.length > 0) {
-    //     let nextPosition = nextVisitableSquare.pop();
-    //     console.log(nextPosition)
-    //     console.log("Knowledgebase after pop: ", nextVisitableSquare)
-    //     let npY = nextPosition.y;
-    //     let npX = nextPosition.x;
+        console.log(temp)
+        console.log("Knowledgebase after pop: ", nextVisitableSquare)
 
-    //     moveList.push({ y: npY, x: npX })
-    //     // moveToNextPostion(moveList, cpY, cpX, npY, npX);
-    //     // As agent moves to the next safe position
-    //     cpY = npY;
-    //     cpX = npX;
-    //     updateKnowledgeBase(cpY, cpX);
+        moveList.push({ y: nextPositionY, x: nextPositionX })
+        // moveToNextPostion(moveList, cpY, cpX, npY, npX);
+        // As agent moves to the next safe position
+        currentPositionY = nextPositionY;
+        currentPositionX = nextPositionX;
+        updateKnowledgeBase(currentPositionY, currentPositionX);
+        console.log("Knowledgebase after push: ", nextVisitableSquare)
+        // if(cpY == 0 && cpX == 3) printCave()
+        // await sleep(1000);
+    }
 
-    //     knowledgeBase = getUpdatedAllVisiableSquare(nextVisitableSquare);
-    //     console.log("Knowledgebase after push: ", nextVisitableSquare)
-    //     // if(cpY == 0 && cpX == 3) printCave()
-    //     // await sleep(1000);
-    // }
-
-    // console.log(moveList)
+    console.log(moveList)
 }
 
 AI_move_By_Propositional_logic(caveBoard.initialize())
+caveBoard.printCave(cave)
 // caveBoard.printCave(caveBoard.initialize())
+printCave();
+
