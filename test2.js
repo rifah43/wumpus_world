@@ -1,6 +1,7 @@
-let myArray = [3];
-let valueToRemove = 3;
-
-myArray = myArray.filter(item => item !== valueToRemove);
-
-console.log(myArray);
+let a =[];
+a.push(2)
+a.push(22)
+a.push(5)
+a.push(21)
+a.push(24)
+console.log(a.pop(2))

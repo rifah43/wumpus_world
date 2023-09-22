@@ -63,64 +63,36 @@ function initializeKnowledgeBase() {
 }
 
 function printCave() {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 10; i++) {
         let line = '';
-        for (let j = 0; j < 6; j++) {
+        for (let j = 0; j < 10; j++) {
             let element = ''
-            element = element + "mw=" + String(knowledgeBase[i][j].maybeWumpus)
-            element = element + "   mp=" + String(knowledgeBase[i][j].maybePit)
-            element = element + "  s=" + String(knowledgeBase[i][j].safe)
-            line = line + element.padEnd(35, " ");
+            if (knowledgeBase[i][j].maybeWumpus == true) element = element + "mw=T";
+            else if (knowledgeBase[i][j].maybeWumpus == false) element = element + "mw=F";
+            else element = element + "mw=N";
+
+            if (knowledgeBase[i][j].maybePit == true) element = element + " mp=T";
+            else if (knowledgeBase[i][j].maybePit == false) element = element + " mp=F";
+            else element = element + " mp=N";
+
+            if (knowledgeBase[i][j].safe == true) element = element + " s=T";
+            else if (knowledgeBase[i][j].safe == false) element = element + " s=F";
+            else element = element + " s=N";
+
+            line = line + element.padEnd(17, " ");
         }
         console.log(line);
     }
     console.log();
 }
 
-function killTheWumpus(pY, pX) {
-    removeWumpusFrom_Cave(pY, pX);
-    removeWumpusFrom_KnowledgeBase(pY, pX)
-}
+function remove_stench_from_adjicent_room(pY, pX) {
+    knowledgeBase[pY][pX].stench = false;
 
-function removeWumpusFrom_KnowledgeBase(pY, pX) {
-    knowledgeBase[pY][pX].noWumpus = true;
-    knowledgeBase[pY][pX].noPit = true;
-    knowledgeBase[pY][pX].safe = true;
-    knowledgeBase[pY][pX].maybePit = false;
-    knowledgeBase[pY][pX].maybeWumpus = false;
-
-    // Removing the stench from adjicent rooms in Knowledge Base
-    if (
-        // if in the upper room feels stench and that's upper, left, right sure that there is no wumpus 
-        (pY > 0) &&
-        (pY <= 1 || knowledgeBase[pY - 2][pX].maybeWumpus == false) &&
-        (pX <= 0 || knowledgeBase[pY - 1][pX - 1].maybeWumpus == false) &&
-        (pX + 1 >= constants.CAVE_WIDTH || knowledgeBase[pY - 1][pX + 1].maybeWumpus == false)
-    ) knowledgeBase[pY - 1][pX].stench == false;
-
-    if (
-        // if in the down room feels stench and that's down, left, right sure that there is no wumpus 
-        (pY + 1 < constants.CAVE_LENGTH) &&
-        (pY + 2 >= constants.CAVE_LENGTH || knowledgeBase[pY + 2][pX].maybeWumpus == false) &&
-        (pX <= 0 || knowledgeBase[pY + 1][pX - 1].maybeWumpus == false) &&
-        (pX + 1 >= constants.CAVE_WIDTH || knowledgeBase[pY + 1][pX + 1].maybeWumpus == false)
-    ) knowledgeBase[pY + 1][pX].stench == false;
-
-    if (
-        // if in the left room feels stench and that's up, down, left sure that there is no wumpus 
-        (pX > 0) &&
-        (pX <= 1 || knowledgeBase[pY][pX - 2].maybeWumpus == false) &&
-        (pY <= 0 || knowledgeBase[pY - 1][pX - 1].maybeWumpus == false) &&
-        (pY + 1 >= constants.CAVE_LENGTH || knowledgeBase[pY + 1][pX - 1].maybeWumpus == false)
-    ) knowledgeBase[pY][pX - 1].stench == false;
-
-    if (
-        // if in the right room feels stench and that's up, down, right sure that there is no wumpus 
-        (pX + 1 < constants.CAVE_WIDTH) &&
-        (pX + 2 >= constants.CAVE_WIDTH || knowledgeBase[pY][pX + 2].maybeWumpus == false) &&
-        (pY <= 0 || knowledgeBase[pY - 1][pX + 1].maybeWumpus == false) &&
-        (pY + 1 >= constants.CAVE_LENGTH || knowledgeBase[pY + 1][pX + 1].maybeWumpus == false)
-    ) knowledgeBase[pY][pX + 1].stench == false;
+    if (pY > 0) knowledgeBase[pY - 1][pX].maybeWumpus = false;
+    if (pY + 1 < constants.CAVE_LENGTH) knowledgeBase[pY + 1][pX].maybeWumpus = false;
+    if (pX > 0) knowledgeBase[pY][pX - 1].maybeWumpus = false;
+    if (pX + 1 < constants.CAVE_WIDTH) knowledgeBase[pY][pX + 1].maybeWumpus = false;
 }
 
 function isAnotherWumpusInAdj(positionY, positionX) {
@@ -131,10 +103,32 @@ function isAnotherWumpusInAdj(positionY, positionX) {
     if (positionX > 0 && cave[positionY][positionX - 1] == constants.WUMPUS) temp.push(positionY, positionX - 1);
     if (positionX + 1 < constants.CAVE_WIDTH && cave[positionY][positionX - 1] == constants.WUMPUS) temp.push(positionY, positionX + 1);
 
-    if (temp.length>1)
+    if (temp.length > 1)
         return true;
     else
         return false;
+}
+
+function removeWumpusFrom_KnowledgeBase(pY, pX) {
+    knowledgeBase[pY][pX].noWumpus = true;
+    knowledgeBase[pY][pX].noPit = true;
+    knowledgeBase[pY][pX].safe = true;
+    knowledgeBase[pY][pX].maybePit = false;
+    knowledgeBase[pY][pX].maybeWumpus = false;
+
+    // Removing the stench from adjicent rooms in Knowledge Base
+    if ((pY > 0) && !cave[pY - 1][pX].includes(constants.STENCH)) {
+        remove_stench_from_adjicent_room(pY - 1, pX);
+    }
+    if ((pY + 1 < constants.CAVE_LENGTH) && !cave[pY + 1][pX].includes(constants.STENCH)) {
+        remove_stench_from_adjicent_room(pY + 1, pX);
+    }
+    if ((pX > 0) && !cave[pY][pX - 1].includes(constants.STENCH)) {
+        remove_stench_from_adjicent_room(pY, pX - 1);
+    }
+    if ((pX + 1 < constants.CAVE_WIDTH) && !cave[pY][pX + 1].includes(constants.STENCH)) {
+        remove_stench_from_adjicent_room(pY, pX + 1);
+    }
 }
 
 function removeWumpusFrom_Cave(pY, pX) {
@@ -145,14 +139,21 @@ function removeWumpusFrom_Cave(pY, pX) {
         cave[pY - 1][pX] = cave[pY - 1][pX].filter(item => item !== constants.STENCH);
     if (pY + 1 < constants.CAVE_LENGTH && !isAnotherWumpusInAdj(pY + 1, pX))
         cave[pY + 1][pX] = cave[pY + 1][pX].filter(item => item !== constants.STENCH);
-    if (pX > 0 && !isAnotherWumpusInAdj(pY, pX-1))
+    if (pX > 0 && !isAnotherWumpusInAdj(pY, pX - 1))
         cave[pY][pX - 1] = cave[pY][pX - 1].filter(item => item !== constants.STENCH);
-    if (pX + 1 < constants.CAVE_WIDTH && !isAnotherWumpusInAdj(pY, pX+1))
+    if (pX + 1 < constants.CAVE_WIDTH && !isAnotherWumpusInAdj(pY, pX + 1))
         cave[pY][pX + 1] = cave[pY][pX + 1].filter(item => item !== constants.STENCH);
+}
+
+function killTheWumpus(pY, pX) {
+    removeWumpusFrom_Cave(pY, pX);
+    removeWumpusFrom_KnowledgeBase(pY, pX)
+    add_as_safe_visitable_square(pY, pX)
 }
 
 
 function isThereWumpus(pY, pX) {
+    if (pY >= constants.CAVE_LENGTH || pY < 0 || pX >= constants.CAVE_WIDTH || pX < 0 || knowledgeBase[pY][pX].safe == true) return false;
     let isThereWum = false;
     if (
         (pY <= 0 || knowledgeBase[pY - 1][pX].stench == true) &&
@@ -198,51 +199,38 @@ function isThereWumpus(pY, pX) {
     return isThereWum;
 }
 
-function isTherePit(pY, pX) {
-    let isPit = false;
-    if (
-        (pY <= 0 || knowledgeBase[pY - 1][pX].breeze == true) &&
-        (pY + 1 >= constants.CAVE_LENGTH || knowledgeBase[pY + 1][pX].breeze == true) &&
-        (pX <= 0 || knowledgeBase[pY][pX - 1].breeze == true) &&
-        (pX + 1 >= constants.CAVE_WIDTH || knowledgeBase[pY][pX + 1].breeze == true)
-    ) isPit = true;
-
-    else if (
-        // if in the upper room feels breeze and that's upper, left, right sure that there is no wumpus 
-        (pY > 0 && knowledgeBase[pY - 1][pX].breeze == true) &&
-        (pY <= 1 || knowledgeBase[pY - 2][pX].maybePit == false) &&
-        (pX <= 0 || knowledgeBase[pY - 1][pX - 1].maybePit == false) &&
-        (pX + 1 >= constants.CAVE_WIDTH || knowledgeBase[pY - 1][pX + 1].maybePit == false)
-    ) isPit = true;
-
-    else if (
-        // if in the down room feels breeze and that's down, left, right sure that there is no wumpus 
-        (pY + 1 < constants.CAVE_LENGTH && knowledgeBase[pY + 1][pX].breeze == true) &&
-        (pY + 2 >= constants.CAVE_LENGTH || knowledgeBase[pY + 2][pX].maybePit == false) &&
-        (pX <= 0 || knowledgeBase[pY + 1][pX - 1].maybePit == false) &&
-        (pX + 1 >= constants.CAVE_WIDTH || knowledgeBase[pY + 1][pX + 1].maybePit == false)
-    ) isPit = true;
-
-    else if (
-        // if in the left room feels breeze and that's up, down, left sure that there is no wumpus 
-        (pX > 0 && knowledgeBase[pY][pX - 1].breeze == true) &&
-        (pX <= 1 || knowledgeBase[pY][pX - 2].maybePit == false) &&
-        (pY <= 0 || knowledgeBase[pY - 1][pX - 1].maybePit == false) &&
-        (pY + 1 >= constants.CAVE_LENGTH || knowledgeBase[pY + 1][pX - 1].maybePit == false)
-    ) isPit = true;
-
-    else if (
-        // if in the right room feels breeze and that's up, down, right sure that there is no wumpus 
-        (pX + 1 < constants.CAVE_WIDTH && knowledgeBase[pY][pX + 1].breeze == true) &&
-        (pX + 2 >= constants.CAVE_WIDTH || knowledgeBase[pY][pX + 2].maybePit == false) &&
-        (pY <= 0 || knowledgeBase[pY - 1][pX + 1].maybePit == false) &&
-        (pY + 1 >= constants.CAVE_LENGTH || knowledgeBase[pY + 1][pX + 1].maybePit == false)
-    ) isPit = true;
-
-    else isPit = false;
+function detectWumpus(pY, pX) {
+    if(isThereWumpus(pY + 1, pX)) {
+        killTheWumpus(pY + 1, pX);
+    }
+    if(isThereWumpus(pY - 1, pX)) {
+        killTheWumpus(pY - 1, pX);
+    }
+    if(isThereWumpus(pY, pX + 1)) {
+        killTheWumpus(pY, pX + 1);
+    }
+    if(isThereWumpus(pY, pX - 1)) {
+        killTheWumpus(pY, pX - 1);
+    }
+}
 
 
-    return isPit;
+function addSafeMoveAccordingDistence(movesArray, currentPositionY, currentPositionX) {
+    let tempArray = [];
+    movesArray.forEach(nextPosition => {
+        let temp=0;
+        if(currentPositionY > nextPosition[0]) temp = temp + currentPositionY - nextPosition[0];
+        else temp = temp + nextPosition[0] - currentPositionY;
+
+        if(currentPositionX > nextPosition[1]) temp = temp + currentPositionX - nextPosition[1];
+        else temp = temp + nextPosition[1] - currentPositionX;
+
+        tempArray.push([nextPosition[0], nextPosition[1], temp]);
+    });
+
+    console.log(tempArray);
+
+    // Needs some codeing
 }
 
 
@@ -295,31 +283,21 @@ function updateKnowledgeBase(pY, pX) {
         knowledgeBase[pY][pX + 1].maybeWumpus = isStench;
     }
 
-    // Setting that is there may Wumpus in adcient room or not
+    let tempSafeMovesArray = [];
     for (let i = 0; i < constants.CAVE_LENGTH; i++) {
         for (let j = 0; j < constants.CAVE_WIDTH; j++) {
 
-            if (knowledgeBase[i][j].safe != null) continue;
-            else if (knowledgeBase[i][j].maybePit == false && knowledgeBase[i][j].maybeWumpus == false) {
+            if (knowledgeBase[i][j].safe == null && knowledgeBase[i][j].maybePit == false && knowledgeBase[i][j].maybeWumpus == false) {
                 knowledgeBase[i][j].noWumpus = true;
                 knowledgeBase[i][j].noPit = true;
                 knowledgeBase[i][j].safe = true;
+                tempSafeMovesArray.push([i, j]);
                 add_as_safe_visitable_square(i, j);
-            }
-            else if (isThereWumpus(i, j)) {
-                console.log("Killing The Wumpus at (", i, j, ")");
-                killTheWumpus(i, j)
-            }
-            else if (isTherePit(i, j)) {
-                knowledgeBase[i][j].noWumpus = true;
-                knowledgeBase[i][j].noPit = false;
-                knowledgeBase[i][j].safe = false;
-                knowledgeBase[i][j].breeze = true;
-                knowledgeBase[i][j].maybePit = true;
-                knowledgeBase[i][j].maybeWumpus = false;
             }
         }
     }
+
+    addSafeMoveAccordingDistence(tempSafeMovesArray, pY, pX);
 }
 
 async function AI_move_By_Propositional_logic(cave) {
@@ -331,12 +309,12 @@ async function AI_move_By_Propositional_logic(cave) {
     add_as_safe_visitable_square(0, 0);             // as (1,1) is the current position of agent and it is safe
     let currentPositionY = 0, currentPositionX = 0;
 
+    i = 0;
     while (total_new_visitable_squere() > 0) {
         let temp = get_next_visitable_squere();
         let nextPositionY = temp.y, nextPositionX = temp.x;
-
-        console.log(temp)
-        console.log("Knowledgebase after pop: ", nextVisitableSquare)
+        // console.log(temp)
+        // console.log("Knowledgebase after pop: ", nextVisitableSquare)
 
         moveList.push({ y: nextPositionY, x: nextPositionX })
         // moveToNextPostion(moveList, cpY, cpX, npY, npX);
@@ -344,9 +322,8 @@ async function AI_move_By_Propositional_logic(cave) {
         currentPositionY = nextPositionY;
         currentPositionX = nextPositionX;
         updateKnowledgeBase(currentPositionY, currentPositionX);
-        console.log("Knowledgebase after push: ", nextVisitableSquare)
-        // if(cpY == 0 && cpX == 3) printCave()
-        // await sleep(1000);
+        // console.log("Knowledgebase after push: ", nextVisitableSquare)
+        detectWumpus(currentPositionY, currentPositionX);
     }
 
     console.log(moveList)
