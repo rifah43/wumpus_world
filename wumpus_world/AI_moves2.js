@@ -1,8 +1,10 @@
 const constants = require('./constants.js');
 const caveBoard = require('./cave.js')
 
-let knowledgeBase = null, cave = null;
+let knowledgeBase = null, cave = null, totalNumberOfGold = 0;
 let nextVisitableSquare = [];
+let moveList = [];
+
 
 function add_as_safe_visitable_square(positionY, positionX) {
     try {
@@ -134,6 +136,7 @@ function removeWumpusFrom_KnowledgeBase(pY, pX) {
 function removeWumpusFrom_Cave(pY, pX) {
 
     cave[pY][pX] = cave[pY][pX].filter(item => item !== constants.WUMPUS);
+    cave[pY][pX].push(constants.DEAD_WUMPUS);
 
     if (pY > 0 && !isAnotherWumpusInAdj(pY - 1, pX))
         cave[pY - 1][pX] = cave[pY - 1][pX].filter(item => item !== constants.STENCH);
@@ -200,37 +203,86 @@ function isThereWumpus(pY, pX) {
 }
 
 function detectWumpus(pY, pX) {
-    if(isThereWumpus(pY + 1, pX)) {
+    if (isThereWumpus(pY + 1, pX)) {
         killTheWumpus(pY + 1, pX);
     }
-    if(isThereWumpus(pY - 1, pX)) {
+    if (isThereWumpus(pY - 1, pX)) {
         killTheWumpus(pY - 1, pX);
     }
-    if(isThereWumpus(pY, pX + 1)) {
+    if (isThereWumpus(pY, pX + 1)) {
         killTheWumpus(pY, pX + 1);
     }
-    if(isThereWumpus(pY, pX - 1)) {
+    if (isThereWumpus(pY, pX - 1)) {
         killTheWumpus(pY, pX - 1);
     }
 }
 
+function moveToNextPostion(cY, cX, nY, nX) {
+    // let action = null;
+    // if (cave[nextPositionY][nextPositionX].includes(constants.GOLD)) action = 'GRAB';
+    // else if (cave[nextPositionY][nextPositionX].includes(constants.DEAD_WUMPUS)) action = 'SHOOT';
+    // else if (cave[nextPositionY][nextPositionX].includes(constants.WUMPUS) ||
+    //     cave[nextPositionY][nextPositionX].includes(constants.PIT)) action = 'DIE';
 
-function addSafeMoveAccordingDistence(movesArray, currentPositionY, currentPositionX) {
-    let tempArray = [];
-    movesArray.forEach(nextPosition => {
-        let temp=0;
-        if(currentPositionY > nextPosition[0]) temp = temp + currentPositionY - nextPosition[0];
-        else temp = temp + nextPosition[0] - currentPositionY;
+    let moveDone = false;
+    let possibleMoves = [];
 
-        if(currentPositionX > nextPosition[1]) temp = temp + currentPositionX - nextPosition[1];
-        else temp = temp + nextPosition[1] - currentPositionX;
-
-        tempArray.push([nextPosition[0], nextPosition[1], temp]);
-    });
-
-    console.log(tempArray);
+    if (cX > 0 && knowledgeBase[cY][cX - 1].safe) possibleMoves.push([cY, cX - 1, distenceOfTwoRooms(cY, cX-1, nY, nX)])
+    else if (cX + 1 < constants.CAVE_WIDTH && knowledgeBase[cY][cX + 1].safe) possibleMoves.push([cY, cX + 1, distenceOfTwoRooms(cY, cX-1, nY, nX)])
+    else if (cY > 0 && knowledgeBase[cY - 1][cX].safe) possibleMoves.push([cY - 1, cX, distenceOfTwoRooms(cY, cX-1, nY, nX)])
+    else if (cY + 1 < constants.CAVE_LENGTH && knowledgeBase[cY + 1][cX].safe) possibleMoves.push([cY + 1, cX, distenceOfTwoRooms(cY, cX-1, nY, nX)])
 
     // Needs some codeing
+    let i, j, l = possibleMoves.length;
+    for (i = 0; i < l; i++) {
+        for (j = i + 1; j < l; j++) {
+            if (possibleMoves[i][2] > possibleMoves[j][2]) {
+                let temp = possibleMoves[i];
+                possibleMoves[i] = possibleMoves[j];
+                possibleMoves[j] = temp;
+            }
+        }
+    }
+
+}
+
+function distenceOfTwoRooms(y1, x1, y2, x2) {
+    let temp = 0;
+    if (y1 > y2) temp = temp + y1 - y2;
+    else temp = temp + y2 - y1;
+
+    if (x1 > x2) temp = temp + x1 - x2;
+    else temp = temp + x2 - x1;
+
+    return temp;
+}
+
+
+function addSafeMoveAccordingDistence(movesArray, currentPositionY, currentPositionX) {
+    if (movesArray.length == 0) return;
+
+    let tempArray = [];
+    movesArray.forEach(nextPosition => {
+        let distence = distenceOfTwoRooms(nextPosition[0], nextPosition[1], currentPositionY, currentPositionX);
+
+        tempArray.push([nextPosition[0], nextPosition[1], distence]);
+    });
+
+    // Needs some codeing
+    let i, j, l = tempArray.length;
+    for (i = 0; i < l; i++) {
+        for (j = i + 1; j < l; j++) {
+            if (tempArray[i][2] > tempArray[j][2]) {
+                let temp = tempArray[i];
+                tempArray[i] = tempArray[j];
+                tempArray[j] = temp;
+            }
+        }
+    }
+
+    for (i = 0; i < l; i++) {
+        add_as_safe_visitable_square(tempArray[i][0], tempArray[i][1]);
+    }
 }
 
 
@@ -292,7 +344,6 @@ function updateKnowledgeBase(pY, pX) {
                 knowledgeBase[i][j].noPit = true;
                 knowledgeBase[i][j].safe = true;
                 tempSafeMovesArray.push([i, j]);
-                add_as_safe_visitable_square(i, j);
             }
         }
     }
@@ -302,7 +353,6 @@ function updateKnowledgeBase(pY, pX) {
 
 async function AI_move_By_Propositional_logic(cave) {
     // move list will contine an object which  will be like = {pY: ,pX: ,nY: ,nX: }
-    let moveList = [];
     initializeKnowledgeBase();
     initializeCave(cave);
 
@@ -316,21 +366,23 @@ async function AI_move_By_Propositional_logic(cave) {
         // console.log(temp)
         // console.log("Knowledgebase after pop: ", nextVisitableSquare)
 
-        moveList.push({ y: nextPositionY, x: nextPositionX })
-        // moveToNextPostion(moveList, cpY, cpX, npY, npX);
+        moveToNextPostion(currentPositionY, currentPositionX, nextPositionY, nextPositionX);
         // As agent moves to the next safe position
         currentPositionY = nextPositionY;
         currentPositionX = nextPositionX;
         updateKnowledgeBase(currentPositionY, currentPositionX);
         // console.log("Knowledgebase after push: ", nextVisitableSquare)
         detectWumpus(currentPositionY, currentPositionX);
+        detectGold(currentPositionY, currentPositionX);
+
     }
 
     console.log(moveList)
 }
 
-AI_move_By_Propositional_logic(caveBoard.initialize())
-caveBoard.printCave(cave)
-// caveBoard.printCave(caveBoard.initialize())
-printCave();
+// AI_move_By_Propositional_logic(caveBoard.initialize())
+// caveBoard.printCave(cave)
+// printCave();
+caveBoard.printCave(caveBoard.initialize());
+console.log(caveBoard.totalNumberOfGold(caveBoard.initialize()))
 

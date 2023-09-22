@@ -134,6 +134,7 @@ function removeWumpusFrom_KnowledgeBase(pY, pX) {
 function removeWumpusFrom_Cave(pY, pX) {
 
     cave[pY][pX] = cave[pY][pX].filter(item => item !== constants.WUMPUS);
+    cave[pY][pX].push(constants.DEAD_WUMPUS);
 
     if (pY > 0 && !isAnotherWumpusInAdj(pY - 1, pX))
         cave[pY - 1][pX] = cave[pY - 1][pX].filter(item => item !== constants.STENCH);
@@ -323,7 +324,7 @@ async function AI_move_By_Propositional_logic(cave) {
 }
 
 AI_move_By_Propositional_logic(caveBoard.initialize())
-// caveBoard.printCave(cave)
+caveBoard.printCave(cave)
 // caveBoard.printCave(caveBoard.initialize())
 // printCave();
 
