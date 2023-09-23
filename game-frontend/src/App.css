@@ -13,8 +13,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: calc(30px + 2vmin);
+  font-weight: bold;
+  color: rgb(237, 252, 124);
   background-color: rgba(246, 229, 157, 0.15); 
 }
 

@@ -7,6 +7,7 @@ function App() {
   return (
     <div className="App" >
       <header className="App-header">
+        Welcome to Wumpus World!
         <div className="board-container">
           <Board />
         </div>
