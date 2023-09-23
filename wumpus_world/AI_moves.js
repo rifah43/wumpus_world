@@ -1,8 +1,10 @@
 const constants = require('./constants.js');
-const caveBoard = require('./cave.js')
+const CaveBoard = require('./cave.js')
 
-let knowledgeBase = null, cave = null;
+let knowledgeBase = null, cave = null, totalNumberOfGold = 0, isKilled = false;
 let nextVisitableSquare = [];
+let moveList = [];
+
 
 function add_as_safe_visitable_square(positionY, positionX) {
     try {
@@ -25,6 +27,7 @@ function total_new_visitable_squere() {
 
 function initializeCave(caveBoard) {
     cave = caveBoard;
+    totalNumberOfGold = CaveBoard.getTotalNumberOfGold(cave)
 }
 
 function initializeKnowledgeBase() {
@@ -98,10 +101,10 @@ function remove_stench_from_adjicent_room(pY, pX) {
 function isAnotherWumpusInAdj(positionY, positionX) {
     let temp = [];
 
-    if (positionY > 0 && cave[positionY - 1][positionX] == constants.WUMPUS) temp.push(positionY - 1, positionX);
-    if (positionY + 1 < constants.CAVE_LENGTH && cave[positionY + 1][positionX] == constants.WUMPUS) temp.push(positionY + 1, positionX);
-    if (positionX > 0 && cave[positionY][positionX - 1] == constants.WUMPUS) temp.push(positionY, positionX - 1);
-    if (positionX + 1 < constants.CAVE_WIDTH && cave[positionY][positionX - 1] == constants.WUMPUS) temp.push(positionY, positionX + 1);
+    if (positionY > 0 && cave[positionY - 1][positionX].includes(constants.WUMPUS)) temp.push(positionY - 1, positionX);
+    else if (positionY + 1 < constants.CAVE_LENGTH && cave[positionY + 1][positionX].includes(constants.WUMPUS)) temp.push(positionY + 1, positionX);
+    else if (positionX > 0 && cave[positionY][positionX - 1].includes(constants.WUMPUS)) temp.push(positionY, positionX - 1);
+    else if (positionX + 1 < constants.CAVE_WIDTH && cave[positionY][positionX - 1].includes(constants.WUMPUS)) temp.push(positionY, positionX + 1);
 
     if (temp.length > 1)
         return true;
@@ -155,7 +158,6 @@ function killTheWumpus(pY, pX) {
 
 function isThereWumpus(pY, pX) {
     if (pY >= constants.CAVE_LENGTH || pY < 0 || pX >= constants.CAVE_WIDTH || pX < 0 || knowledgeBase[pY][pX].safe == true) return false;
-
     let isThereWum = false;
     if (
         (pY <= 0 || knowledgeBase[pY - 1][pX].stench == true) &&
@@ -199,6 +201,114 @@ function isThereWumpus(pY, pX) {
     else isThereWum = false;
 
     return isThereWum;
+}
+
+function detectWumpus(pY, pX) {
+    if (isThereWumpus(pY + 1, pX)) {
+        killTheWumpus(pY + 1, pX);
+    }
+    if (isThereWumpus(pY - 1, pX)) {
+        killTheWumpus(pY - 1, pX);
+    }
+    if (isThereWumpus(pY, pX + 1)) {
+        killTheWumpus(pY, pX + 1);
+    }
+    if (isThereWumpus(pY, pX - 1)) {
+        killTheWumpus(pY, pX - 1);
+    }
+}
+
+async function moveToNextPostion(cY, cX, nY, nX) {
+    if (cY == nY && cX == nX) return;
+
+    let possibleMoves = [];
+    // Finding the best moves by compairing the distence
+    if (cX > 0 && knowledgeBase[cY][cX - 1].safe) possibleMoves.push([cY, cX - 1, distenceOfTwoRooms(cY, cX - 1, nY, nX)])
+    if (cX + 1 < constants.CAVE_WIDTH && knowledgeBase[cY][cX + 1].safe) possibleMoves.push([cY, cX + 1, distenceOfTwoRooms(cY, cX + 1, nY, nX)])
+    if (cY > 0 && knowledgeBase[cY - 1][cX].safe) possibleMoves.push([cY - 1, cX, distenceOfTwoRooms(cY - 1, cX, nY, nX)])
+    if (cY + 1 < constants.CAVE_LENGTH && knowledgeBase[cY + 1][cX].safe) possibleMoves.push([cY + 1, cX, distenceOfTwoRooms(cY + 1, cX, nY, nX)])
+
+    let i, distence = Number.MAX_SAFE_INTEGER
+    let l = possibleMoves.length;
+    let bestNextMoveY, bestNextMoveX;
+    // console.log(possibleMoves)
+
+    for (i = 0; i < l; i++) {
+        if (distence > possibleMoves[i][2]) {
+            bestNextMoveY = possibleMoves[i][0];
+            bestNextMoveX = possibleMoves[i][1];
+            distence = possibleMoves[i][2];
+        }
+    }
+
+
+    let action = null, grab = null, move = null;
+    if (cave[bestNextMoveY][bestNextMoveX].includes(constants.DEAD_WUMPUS)) action = 'SHOOT';
+    else if (cave[bestNextMoveY][bestNextMoveX].includes(constants.WUMPUS) || cave[bestNextMoveY][bestNextMoveX].includes(constants.PIT)) {
+        action = 'DIE';
+        isKilled = true;
+    }
+    else action = "NO_ACTION";
+
+    if (cave[cY][cX].includes(constants.GOLD)) {
+        grab = true;
+        totalNumberOfGold--;
+        cave[cY][cX].filter(item => item !== constants.GOLD);
+    }
+    else grab = false;
+
+    // console.log(cY,cX,"   ", bestNextMoveY, bestNextMoveX, "   ", nY, nX, action, cave[bestNextMoveY][bestNextMoveX]);
+    // await sleep(500)
+
+    if (bestNextMoveY < cY) move = "UP"
+    else if (bestNextMoveY > cY) move = "DOWN";
+    else if (bestNextMoveX < cX) move = "LEFT";
+    else if (bestNextMoveX > cX) move = "RIGHT";
+
+    moveList.push({ move: move, action: action, grab: grab })
+
+    if (!isKilled && totalNumberOfGold > 0) {
+        moveToNextPostion(bestNextMoveY, bestNextMoveX, nY, nX)
+    }
+    else return;
+}
+
+function distenceOfTwoRooms(y1, x1, y2, x2) {
+    let temp = 0;
+    if (y1 > y2) temp = temp + y1 - y2;
+    else temp = temp + y2 - y1;
+
+    if (x1 > x2) temp = temp + x1 - x2;
+    else temp = temp + x2 - x1;
+
+    return temp;
+}
+
+
+function addSafeMoveAccordingDistence(movesArray, currentPositionY, currentPositionX) {
+    if (movesArray.length == 0) return;
+
+    let tempArray = [];
+    movesArray.forEach(nextPosition => {
+        let distence = distenceOfTwoRooms(nextPosition[0], nextPosition[1], currentPositionY, currentPositionX);
+
+        tempArray.push([nextPosition[0], nextPosition[1], distence]);
+    });
+
+    let i, j, l = tempArray.length;
+    for (i = 0; i < l; i++) {
+        for (j = i + 1; j < l; j++) {
+            if (tempArray[i][2] > tempArray[j][2]) {
+                let temp = tempArray[i];
+                tempArray[i] = tempArray[j];
+                tempArray[j] = temp;
+            }
+        }
+    }
+
+    for (i = 0; i < l; i++) {
+        add_as_safe_visitable_square(tempArray[i][0], tempArray[i][1]);
+    }
 }
 
 
@@ -251,7 +361,7 @@ function updateKnowledgeBase(pY, pX) {
         knowledgeBase[pY][pX + 1].maybeWumpus = isStench;
     }
 
-    // Setting that is there may Wumpus in adcient room or not
+    let tempSafeMovesArray = [];
     for (let i = 0; i < constants.CAVE_LENGTH; i++) {
         for (let j = 0; j < constants.CAVE_WIDTH; j++) {
 
@@ -259,72 +369,45 @@ function updateKnowledgeBase(pY, pX) {
                 knowledgeBase[i][j].noWumpus = true;
                 knowledgeBase[i][j].noPit = true;
                 knowledgeBase[i][j].safe = true;
-                add_as_safe_visitable_square(i, j);
+                tempSafeMovesArray.push([i, j]);
             }
         }
     }
+
+    addSafeMoveAccordingDistence(tempSafeMovesArray, pY, pX);
 }
 
-function detectWumpus(pY, pX) {
-    if(isThereWumpus(pY + 1, pX)) {
-        console.log(pY, pX)
-        console.log("Wumpus in ", pY + 1, pX);
-        killTheWumpus(pY + 1, pX);
-    }
-    if(isThereWumpus(pY - 1, pX)) {
-        console.log(pY, pX)
-        console.log("Wumpus in ", pY - 1, pX);
-        killTheWumpus(pY - 1, pX);
-    }
-    if(isThereWumpus(pY, pX + 1)) {
-        console.log(pY, pX)
-        console.log("Wumpus in ", pY, pX + 1);
-        killTheWumpus(pY, pX + 1);
-    }
-    if(isThereWumpus(pY, pX - 1)) {
-        console.log(pY, pX)
-        console.log("Wumpus in ", pY, pX - 1);
-        killTheWumpus(pY, pX - 1);
-    }
-}
-async function AI_move_By_Propositional_logic(cave) {
+function AI_move_By_Propositional_logic(cave) {
     // move list will contine an object which  will be like = {pY: ,pX: ,nY: ,nX: }
-    let moveList = [];
     initializeKnowledgeBase();
     initializeCave(cave);
 
     add_as_safe_visitable_square(0, 0);             // as (1,1) is the current position of agent and it is safe
     let currentPositionY = 0, currentPositionX = 0;
 
-    // i = 0;
     while (total_new_visitable_squere() > 0) {
         let temp = get_next_visitable_squere();
         let nextPositionY = temp.y, nextPositionX = temp.x;
-        // console.log("Knowledgebase after pop: ", nextVisitableSquare)
 
-        moveList.push({ y: nextPositionY, x: nextPositionX })
-        // moveToNextPostion(moveList, cpY, cpX, npY, npX);
-        // As agent moves to the next safe position
+        moveToNextPostion(currentPositionY, currentPositionX, nextPositionY, nextPositionX);
         currentPositionY = nextPositionY;
         currentPositionX = nextPositionX;
         updateKnowledgeBase(currentPositionY, currentPositionX);
-        // console.log(temp);
-        // printCave();
-        // console.log("Knowledgebase after push: ", nextVisitableSquare)
-        // if(cpY == 0 && cpX == 3) printCave()
-        // await sleep(1000);
-
-        // if(total_new_visitable_squere() > 0) {
-        //     killWumpus();
-        // }
         detectWumpus(currentPositionY, currentPositionX);
+
+        if (totalNumberOfGold <= 0 || isKilled) break;
     }
 
     console.log(moveList)
 }
 
-AI_move_By_Propositional_logic(caveBoard.initialize())
-caveBoard.printCave(cave)
-// caveBoard.printCave(caveBoard.initialize())
+// AI_move_By_Propositional_logic(CaveBoard.initialize())
+// CaveBoard.printCave(cave)
 // printCave();
+// CaveBoard.printCave(CaveBoard.initialize());
+// console.log(CaveBoard.totalNumberOfGold(CaveBoard.initialize()))
+
+module.exports = {
+    AI_move_By_Propositional_logic
+}
 

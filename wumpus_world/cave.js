@@ -50,7 +50,7 @@ function initialize() {
     return addPerceivation(cave);
 }
 
-function totalNumberOfGold(cave) {
+function getTotalNumberOfGold(cave) {
     let temp=0;
     for(let i=0;i<CAVE_LENGTH;i++) {
         for(let j=0;j<CAVE_WIDTH;j++) {
@@ -62,7 +62,7 @@ function totalNumberOfGold(cave) {
     return temp;
 }
 
-function totalNumberOfWumpus(cave) {
+function getTotalNumberOfWumpus(cave) {
     let temp=0;
     for(let i=0;i<CAVE_LENGTH;i++) {
         for(let j=0;j<CAVE_WIDTH;j++) {
@@ -112,5 +112,5 @@ function isPitInAdj(cave, i, j) {
 }
 
 module.exports = {
-    printCave, initialize, isPitInAdj, isWumpusInAdj, totalNumberOfGold, totalNumberOfWumpus
+    printCave, initialize, isPitInAdj, isWumpusInAdj, getTotalNumberOfGold, getTotalNumberOfWumpus
 }
