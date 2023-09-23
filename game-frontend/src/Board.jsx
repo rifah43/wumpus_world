@@ -41,27 +41,27 @@ class Board extends React.Component {
 
     if (cellData[0] === WUMPUS) {
       content.push(<img key="wumpus" src="/images/wumpus.png" alt="Wumpus" />);
-      // content.push(<img key="ok" src="/images/door2.png" alt="Ok" />);
+      // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
     } else if (cellData[0] === GOLD) {
       content.push(<img key="gold" src="/images/gold.png" alt="Gold" />);
-      // content.push(<img key="ok" src="/images/door2.png" alt="Ok" />);
+      // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
     } else if (cellData[0] === PIT) {
       content.push(<img key="pit" src="/images/pit.png" alt="Pit" />);
-      // content.push(<img key="ok" src="/images/door2.png" alt="Ok" />);
+      // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
     } else if (cellData[0] === STENCH) {
       content.push(<img key="stench" src="/images/stench.png" alt="Stench" />);
-      // content.push(<img key="ok" src="/images/door2.png" alt="Ok" />);
+      // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
     } else if (cellData[0] === BREEZE) {
       content.push(<img key="breeze" src="/images/breeze.png" alt="Breeze" />);
-      // content.push(<img key="ok" src="/images/door2.png" alt="Ok" />);
+      // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
     } else if (cellData[0] === AGENT) {
       content.push(<img key="agent" src="/images/agent.png" alt="Agent" />);
-      // content.push(<img key="ok" src="/images/door2.png" alt="Ok" />);
+      // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
     } else if (cellData[0] === OK) {
-      // content.push(<img key="ok" src="/images/door2.png" alt="Ok" />);
+      // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
     } else {
       // Default case
-      content.push(<img key="closed" src="/images/door1.png" alt="Closed" />);
+      content.push(<img key="closed" src="/images/closed.png" alt="Closed" />);
     }
 
     return <div className="cell-content">{content}</div>;
