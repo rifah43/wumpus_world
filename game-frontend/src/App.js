@@ -11,6 +11,9 @@ function App() {
           <Board />
         </div>
       </header>
+      <footer>
+        ©- Made by Muktadul, Aurchey & Rifah - 2023
+      </footer>
     </div>
   );
 }

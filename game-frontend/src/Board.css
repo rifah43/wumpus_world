@@ -1,14 +1,14 @@
 .board {
   background-color: rgb(236, 204, 162);
-  border: solid 10px rgba(236, 204, 162, 0.804);
+  border: solid 6px rgb(236, 204, 162);
   border-radius: 10px;
   /* background-image: url('/public/images/bg2.jpg'); */
   background-size: cover;
   background-repeat: repeat;
   background-attachment: fixed;
-  width: 50%; /* Adjust the width to your desired size */
-  height: 50%; /* Adjust the height to your desired size */
-  margin: 0 auto; /* Center the board horizontally */
+  width: 50%; 
+  height: 50%; 
+  margin: 0 auto; 
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
