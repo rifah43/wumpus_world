@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Board from './Board'; 
+import MainBoard from './MainBoard';
 
 function App() {
 
@@ -8,10 +9,13 @@ function App() {
     <div className="App" >
       <header className="App-header">
         Welcome to Wumpus World!
-        <div className="board-container">
-          <Board />
-        </div>
       </header>
+      <body>
+        <div className="board-container">
+            <div className='Board'><Board /></div>
+            <div className='MainBoard'><MainBoard/></div>
+        </div>
+      </body>
       <footer>
         ©- Made by Muktadul, Aurchey & Rifah - 2023
       </footer>
