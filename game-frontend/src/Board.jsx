@@ -61,7 +61,7 @@ class Board extends React.Component {
       // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
     } else {
       // Default case
-      content.push(<img key="closed" src="/images/closed.png" alt="Closed" />);
+      content.push(<img key="closed" src="/images/opened.png" alt="Closed" />);
     }
 
     return <div className="cell-content">{content}</div>;

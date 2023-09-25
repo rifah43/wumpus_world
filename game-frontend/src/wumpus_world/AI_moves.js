@@ -399,9 +399,10 @@ function AI_move_By_Propositional_logic(cave) {
     }
 
     console.log(moveList)
+    return moveList;
 }
 
-// AI_move_By_Propositional_logic(CaveBoard.initialize())
+AI_move_By_Propositional_logic(CaveBoard.initialize())
 // CaveBoard.printCave(cave)
 // printCave();
 // CaveBoard.printCave(CaveBoard.initialize());
