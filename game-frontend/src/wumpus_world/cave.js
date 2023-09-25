@@ -1,6 +1,6 @@
 const { WUMPUS, PIT, AGENT, GOLD, CAVE_LENGTH, CAVE_WIDTH, STENCH, BREEZE } = require('./constants.js')
 
-
+var generated_cave = [];
 function addPerceivation(cave) {
     let newCave = [];
     for(let i=0;i<CAVE_LENGTH;i++) {
@@ -31,8 +31,37 @@ function addPerceivation(cave) {
     return newCave;
 }
 
+function board_data(data){
+    for(let i=0;i<CAVE_LENGTH;i++) {
+        let tempRow = []
+        for(let j=0;j<CAVE_WIDTH;j++) {
+            let temp = [];
+            if(data[i][j].includes('GOLD')){
+                temp.push(GOLD);
+            }
+            else if(data[i][j].includes('WUMPUS')){
+                temp.push(WUMPUS);
+            }
+            else if(data[i][j].includes('PIT')){
+                temp.push(PIT);
+            }
+            else if(data[i][j].includes('AGENT')){
+                temp.push(AGENT);
+            }
+            else{
+                temp.push(null);
+            }
+            tempRow.push(temp[0]);
+        }
+        generated_cave.push(tempRow);
+    }
+}
+
 
 function initialize() {
+    if(generated_cave.length !== 0){
+        return addPerceivation(generated_cave);
+    }
     let cave = [
         [AGENT, null, WUMPUS, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null, WUMPUS, null],
@@ -112,5 +141,5 @@ function isPitInAdj(cave, i, j) {
 }
 
 module.exports = {
-    printCave, initialize, isPitInAdj, isWumpusInAdj, getTotalNumberOfGold, getTotalNumberOfWumpus
+    printCave, board_data, initialize, isPitInAdj, isWumpusInAdj, getTotalNumberOfGold, getTotalNumberOfWumpus
 }

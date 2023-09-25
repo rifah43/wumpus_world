@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Board from './Board'; 
 import MainBoard from './MainBoard';
+import CSVParser from './CSVParser';
 
 function App() {
 
@@ -11,7 +12,8 @@ function App() {
         Welcome to Wumpus World!
       </header>
       <body>
-        <div className="board-container">
+        <CSVParser/> 
+        <div className="board-container"> 
             <div className='Board'><Board /></div>
             <div className='MainBoard'><MainBoard/></div>
         </div>
