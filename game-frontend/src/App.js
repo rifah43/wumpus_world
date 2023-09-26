@@ -1,10 +1,17 @@
-import React from 'react';
+import React,  {useState} from 'react';
 import './App.css';
 import Board from './Board'; 
 import MainBoard from './MainBoard';
 import CSVParser from './CSVParser';
 
 function App() {
+  const [csvData, setCsvData] = useState([]);
+
+  const handleDataParsed = async(data) => {
+    // Update the state with the parsed data
+    setCsvData(data);
+    console.log(csvData);
+  };
 
   return (
     <div className="App" >
@@ -12,8 +19,8 @@ function App() {
         Welcome to Wumpus World!
       </header>
       <body>
-        <CSVParser/> 
-        <div className="board-container"> 
+        <CSVParser onDataParsed={handleDataParsed} />
+        <div className="board-container">             }
             <div className='Board'><Board /></div>
             <div className='MainBoard'><MainBoard/></div>
         </div>

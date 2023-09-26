@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import Papa from 'papaparse';
 import { board_data} from './wumpus_world/cave.js'
 
-const CSVParser = () => {
-  const [csvData, setCsvData] = useState([]);
+const CSVParser = ({onDataParsed}) => {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -16,7 +15,7 @@ const CSVParser = () => {
 
         Papa.parse(csvText, {
           complete: (result) => {
-            setCsvData(result.data);
+            onDataParsed(result.data);
             board_data(result.data);
           },
           header: false, // Set to true if CSV has header row
