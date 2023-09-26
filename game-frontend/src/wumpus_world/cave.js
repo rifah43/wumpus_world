@@ -140,6 +140,40 @@ function isPitInAdj(cave, i, j) {
         return false;
 }
 
+function randomCaveGeneration(numberOfGold, numberOfWumpus, numberOfPit) {
+    let newCave = Array.from({ length: CAVE_LENGTH }, () => Array(CAVE_WIDTH).fill(null));
+    let y,x;
+
+    newCave[0][0] = AGENT;
+    // Assigning Gold
+    for (let i = 0; i < numberOfGold; i++) {
+        [y,x] = getRandomCoordinate(newCave, CAVE_LENGTH, CAVE_WIDTH);
+        newCave[y][x] = GOLD
+    }
+    // Assigning Wumpus
+    for (let i = 0; i < numberOfWumpus; i++) {
+        [y,x] = getRandomCoordinate(newCave, CAVE_LENGTH, CAVE_WIDTH);
+        newCave[y][x] = WUMPUS
+    }
+    // Assigning Pit
+    for (let i = 0; i < numberOfPit; i++) {
+        [y,x] = getRandomCoordinate(newCave, CAVE_LENGTH, CAVE_WIDTH);
+        newCave[y][x] = PIT
+    }
+
+    return addPerceivation(newCave)
+}
+
+function getRandomCoordinate(cave, cave_length, cave_width) {
+    const y = Math.floor(Math.random() * cave_length);
+    const x = Math.floor(Math.random() * cave_width);
+
+    if (cave[y][x] != null || (y === 1 && x === 0) || (y === 0 && x === 1) || (y === 0 && x === 0)) {
+        return getRandomCoordinate(cave, cave_length,cave_width);
+    }
+    else return [y,x];
+}
+
 module.exports = {
-    printCave, board_data, initialize, isPitInAdj, isWumpusInAdj, getTotalNumberOfGold, getTotalNumberOfWumpus
+    printCave, board_data, initialize, isPitInAdj, isWumpusInAdj, getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration
 }
