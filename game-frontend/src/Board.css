@@ -42,10 +42,8 @@
 }
 
 .fg img {
-  max-width: 30%; /* Set the maximum width to 30% of the cell */
-  max-height: 30%; /* Set the maximum height to 30% of the cell */
+  max-width: 30%; 
+  max-height: 30%;
   position: absolute;
-  top: 35%; /* Adjust the top position for vertical alignment */
-  left: 35%; /* Adjust the left position for horizontal alignment */
   z-index: 1;
 }

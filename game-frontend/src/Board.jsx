@@ -49,7 +49,7 @@ class Board extends React.Component {
     if (cellData === WUMPUS) {
       content.push(<img key="wumpus" src="/images/wumpus.gif" alt="Wumpus" className="fg"/>);
     }  if (cellData === GOLD) {
-      content.push(<img key="gold" src="/images/gold.png" alt="Gold" className="fg" height="30%" width="30%"/>);
+      content.push(<img key="gold" src="/images/gold.gif" alt="Gold" className="fg" />);
     }  if (cellData === PIT) {
       content.push(<img key="pit" src="/images/pit.png" alt="Pit"  className="fg" />);
     }  if (cellData === STENCH) {
