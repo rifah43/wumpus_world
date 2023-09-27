@@ -19,11 +19,12 @@ function App() {
         Welcome to Wumpus World!
       </header>
       <body>
+      <CSVParser onDataParsed={handleDataParsed} />
         <div className="board-container">             
             <div className='Board'><h3>Inspection Board</h3><Board /></div>
-            <div className='MainBoard'><h3>Main Board</h3><MainBoard/><button type="primary">Start</button></div>
+            <div className='MainBoard'><h3>Main Board</h3><MainBoard/></div>
         </div>
-        <CSVParser onDataParsed={handleDataParsed} />
+        
       </body>
       <footer>
         ©- Made by Muktadul, Aurchey & Rifah - 2023
