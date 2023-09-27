@@ -6,16 +6,16 @@ function printCave(knowledgeBase) {
         let line = '';
         for (let j = 0; j < 10; j++) {
             let element = ''
-            if (knowledgeBase[i][j].stench == true) element = element + "s=T";
-            else if (knowledgeBase[i][j].stench == false) element = element + "s=F";
+            if (knowledgeBase[i][j].stench === true) element = element + "s=T";
+            else if (knowledgeBase[i][j].stench === false) element = element + "s=F";
             else element = element + "s=N";
 
-            if (knowledgeBase[i][j].breeze == true) element = element + " b=T";
-            else if (knowledgeBase[i][j].breeze == false) element = element + " b=F";
+            if (knowledgeBase[i][j].breeze === true) element = element + " b=T";
+            else if (knowledgeBase[i][j].breeze === false) element = element + " b=F";
             else element = element + " b=N";
 
-            if (knowledgeBase[i][j].safe == true) element = element + " ss=T";
-            else if (knowledgeBase[i][j].safe == false) element = element + " ss=F";
+            if (knowledgeBase[i][j].safe === true) element = element + " ss=T";
+            else if (knowledgeBase[i][j].safe === false) element = element + " ss=F";
             else element = element + " ss=N";
 
             line = line + element.padEnd(17, " ");
@@ -37,10 +37,10 @@ function getProbability(knowledgeBase, length, width, positionY, positionX, perc
 }
 
 function isAdjRoomVisited(knowledgeBase, length, width, positionY, positionX) {
-    if (positionY > 0 && knowledgeBase[positionY - 1][positionX].safe === true ||
-        positionY + 1 < length && knowledgeBase[positionY + 1][positionX].safe === true ||
-        positionX > 0 && knowledgeBase[positionY][positionX - 1].safe === true ||
-        positionX + 1 < width && knowledgeBase[positionY][positionX + 1].safe === true)
+    if ((positionY > 0 && knowledgeBase[positionY - 1][positionX].safe === true) ||
+        (positionY + 1 < length && knowledgeBase[positionY + 1][positionX].safe) === true ||
+        (positionX > 0 && knowledgeBase[positionY][positionX - 1].safe === true) ||
+        (positionX + 1 < width && knowledgeBase[positionY][positionX + 1].safe === true))
         return true;
     else return false;
 }
@@ -62,7 +62,7 @@ function getBestAction(probabilityArray, numberOfArrow, currentPositionY, curren
     else {
         let temp = probabilityArray[0];
         for (let i = 1; i < length; i++) {
-            if ((temp.pW + temp.pP) == (probabilityArray[i].pW + probabilityArray[i].pP)) {
+            if ((temp.pW + temp.pP) === (probabilityArray[i].pW + probabilityArray[i].pP)) {
                 if (Math.abs(temp.y - currentPositionY) + Math.abs(temp.x - currentPositionX) >
                     Math.abs(probabilityArray[i].y - currentPositionY) + Math.abs(probabilityArray[i].x - currentPositionX))
                     temp = probabilityArray[i];

@@ -54,6 +54,7 @@ function board_data(data){
             tempRow.push(temp[0]);
         }
         generated_cave.push(tempRow);
+        console.log(tempRow);
     }
 }
 
@@ -162,6 +163,7 @@ function randomCaveGeneration(numberOfGold, numberOfWumpus, numberOfPit) {
         newCave[y][x] = PIT
     }
 
+    console.log("Random Cave" + newCave);
     return addPerceivation(newCave)
 }
 
