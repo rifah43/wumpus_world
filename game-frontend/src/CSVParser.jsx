@@ -28,7 +28,7 @@ const CSVParser = ({onDataParsed}) => {
 
   return (
     <div>
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
+      <input type="file" accept=".csv" onChange={handleFileUpload}/>
     </div>
   );
 };
