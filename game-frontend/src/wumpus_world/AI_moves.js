@@ -8,7 +8,7 @@ let nextVisitableSquare = [];
 let moveList = [];
 
 function add_SubPath(path) {
-    for (i = 0; i < path.length; i++) {
+    for (let i = 0; i < path.length; i++) {
         moveList.push(path[i])
     }
 }
@@ -25,7 +25,7 @@ function add_as_safe_visitable_square(positionY, positionX) {
 
 function get_next_visitable_squere() {
     if (nextVisitableSquare.length > 0) return nextVisitableSquare.pop();
-    else null;
+    else return null;
 }
 
 function total_new_visitable_squere() {
@@ -404,7 +404,7 @@ function AI_move_By_Propositional_logic(cave) {
     return Path.addDirection_Action(cave, moveList);
 }
 
-AI_move_By_Propositional_logic(CaveBoard.randomCaveGeneration(4, 8, 7))
+// AI_move_By_Propositional_logic(CaveBoard.randomCaveGeneration(4, 8, 7))
 // AI_move_By_Propositional_logic(CaveBoard.initialize())
 // CaveBoard.printCave(cave)
 // printCave();
