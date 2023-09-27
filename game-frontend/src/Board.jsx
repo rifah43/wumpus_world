@@ -22,8 +22,18 @@ class Board extends React.Component {
             key={cellId}
             className="cell"
             id={cellId}
+            style={{ position : "relative"}}
           >
-            {this.renderCellContent(this.board[y][x])}
+            {
+              this.renderCellContent(undefined)
+            }
+            {
+              this.board[y][x].map((cellData, index) => {
+                console.log(cellData+ ' ' + index);
+                return this.renderCellContent(cellData);
+              })
+            }
+            
           </div>
         );
       }
@@ -38,33 +48,33 @@ class Board extends React.Component {
 
   renderCellContent(cellData) {
     const content = [];
-
-    if (cellData[0] === WUMPUS) {
+    if (cellData === WUMPUS) {
       content.push(<img key="wumpus" src="/images/wumpus.png" alt="Wumpus" />);
       // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
-    } else if (cellData[0] === GOLD) {
+    }  if (cellData === GOLD) {
       content.push(<img key="gold" src="/images/gold.png" alt="Gold" />);
       // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
-    } else if (cellData[0] === PIT) {
-      content.push(<img key="pit" src="/images/pit.png" alt="Pit" />);
+    }  if (cellData === PIT) {
+      content.push(<img key="pit" src="/images/pit.png" alt="Pit"   />);
       // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
-    } else if (cellData[0] === STENCH) {
-      content.push(<img key="stench" src="/images/stench.png" alt="Stench" />);
+    }  if (cellData === STENCH) {
+      content.push(<img key="stench" src="/images/stench.png" alt="Stench"  />);
       // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
-    } else if (cellData[0] === BREEZE) {
-      content.push(<img key="breeze" src="/images/breeze.png" alt="Breeze" />);
+    } if (cellData === BREEZE) {
+      content.push(<img key="breeze" src="/images/breeze.png" alt="Breeze"   />);
       // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
-    } else if (cellData[0] === AGENT) {
+    }  if (cellData === AGENT) {
       content.push(<img key="agent" src="/images/agent.png" alt="Agent" />);
       // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
-    } else if (cellData[0] === OK) {
+    }  if (cellData=== OK) {
       // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
-    } else {
+    } 
+    else if (cellData === undefined) {
       // Default case
-      content.push(<img key="closed" src="/images/opened.png" alt="Closed" />);
+      content.push(<img key="closed" src="/images/opened.png" alt="Closed" className="bg"/>);
     }
 
-    return <div className="cell-content">{content}</div>;
+    return content;
   }
 }
 

@@ -1,8 +1,8 @@
-import React,  {useState} from 'react';
+import React,  {useEffect, useState} from 'react';
 import './App.css';
 import Board from './Board'; 
 import MainBoard from './MainBoard';
-import CSVParser from './CSVParser';
+import CSVParser from './CSVParser'
 
 function App() {
   const [csvData, setCsvData] = useState([]);
@@ -18,6 +18,7 @@ function App() {
       <header className="App-header">
         Welcome to Wumpus World!
       </header>
+
       <body className="App-body">
         {clicked ? <div className="board-container">
           <div className='Board'><h3>Inspection Board</h3><Board /></div>

@@ -34,3 +34,8 @@
   width: auto;
   height: auto;
 }
+
+.bg {
+  position: absolute;
+}
+
