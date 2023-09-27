@@ -1,7 +1,7 @@
 const constants = require('./constants.js');
 const CaveBoard = require('./cave.js');
 const Path = require('./path.js');
-// const ProbabilisticMove = require('./probabilisticMove.js');
+const ProbabilisticMove = require('./probabilisticMove.js');
 
 let knowledgeBase = null, cave = null, numberOfGolds = 0, numberOfArrors = 0;
 let nextVisitableSquare = [];
@@ -290,6 +290,8 @@ function addSafeMoveAccordingDistence(movesArray, currentPositionY, currentPosit
 
 
 function updateKnowledgeBase(pY, pX) {
+    knowledgeBase[pY][pX].visited = true;
+
     let isBreeze, isStench;
     if (cave[pY][pX].includes(constants.BREEZE)) {
         knowledgeBase[pY][pX].breeze = true;
@@ -389,18 +391,17 @@ function AI_move_By_Propositional_logic(cave) {
         detectWumpus(currentPositionY, currentPositionX);
 
         // If there is no safe next move but sill  there is gold then use probabilistic reasoning
-        // if (total_new_visitable_squere() == 0) {
-        //     ProbabilisticMove.makeProbabilisticMove(knowledgeBase, cave, numberOfArrors)
-        // }
-    // }
+        if (total_new_visitable_squere() == 0) {
+            ProbabilisticMove.makeProbabilisticMove(knowledgeBase, cave, numberOfArrors, currentPositionY,currentPositionX)
+        }
+    }
     console.log("numberOfGolds=", numberOfGolds)
     console.log("numberOfArror=", numberOfArrors)
 
-    console.log(Path.addDirection_Action(cave, moveList))
+    // console.log(Path.addDirection_Action(cave, moveList))
     // console.log(moveList)
 
     return Path.addDirection_Action(cave, moveList);
-}
 }
 
 AI_move_By_Propositional_logic(CaveBoard.randomCaveGeneration(4, 8, 7))
@@ -413,3 +414,4 @@ AI_move_By_Propositional_logic(CaveBoard.randomCaveGeneration(4, 8, 7))
 module.exports = {
     AI_move_By_Propositional_logic
 }
+
