@@ -1,7 +1,7 @@
 const constants = require('./constants.js');
 const CaveBoard = require('./cave.js');
 const Path = require('./path.js');
-const ProbabilisticMove = require('./probabilisticMove.js');
+// const ProbabilisticMove = require('./probabilisticMove.js');
 
 let knowledgeBase = null, cave = null, numberOfGolds = 0, numberOfArrors = 0;
 let nextVisitableSquare = [];
@@ -392,7 +392,7 @@ function AI_move_By_Propositional_logic(cave) {
         // if (total_new_visitable_squere() == 0) {
         //     ProbabilisticMove.makeProbabilisticMove(knowledgeBase, cave, numberOfArrors)
         // }
-    }
+    // }
     console.log("numberOfGolds=", numberOfGolds)
     console.log("numberOfArror=", numberOfArrors)
 
@@ -400,6 +400,7 @@ function AI_move_By_Propositional_logic(cave) {
     // console.log(moveList)
 
     return Path.addDirection_Action(cave, moveList);
+}
 }
 
 AI_move_By_Propositional_logic(CaveBoard.randomCaveGeneration(4, 8, 7))
@@ -412,4 +413,3 @@ AI_move_By_Propositional_logic(CaveBoard.randomCaveGeneration(4, 8, 7))
 module.exports = {
     AI_move_By_Propositional_logic
 }
-
