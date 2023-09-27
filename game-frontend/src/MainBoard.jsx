@@ -1,7 +1,7 @@
 import React from 'react';
-import './Board.css'; 
+import "./Board.css";
 import { initialize } from './wumpus_world/cave';
-import { WUMPUS, PIT, GOLD, STENCH, BREEZE, AGENT, CAVE_LENGTH, CAVE_WIDTH, OK } from './wumpus_world/constants';
+import { AGENT, CAVE_LENGTH, CAVE_WIDTH } from './wumpus_world/constants';
 
 class MainBoard extends React.Component {
   constructor(props) {
@@ -40,8 +40,8 @@ class MainBoard extends React.Component {
     const content = [];
    
     if (cellData[0] === AGENT) {
-      content.push(<img key="agent" src="/images/agent.png" alt="Agent" />);
-      // content.push(<img key="ok" src="/images/opened.png" alt="Ok" />);
+      content.push(<img key="agent" src="/images/agent.gif" alt="Agent" />);
+      // content.push(<img key="ok" src="/images/opened.gif" alt="Ok" />);
     }  else {
       // Default case
       content.push(<img key="closed" src="/images/closed.png" alt="Closed" />);
