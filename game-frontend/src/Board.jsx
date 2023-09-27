@@ -1,12 +1,12 @@
 import React from 'react';
 import './Board.css'; 
-import { initialize } from './wumpus_world/cave';
+import {  randomCaveGeneration } from './wumpus_world/cave';
 import { WUMPUS, PIT, GOLD, STENCH, BREEZE, AGENT, CAVE_LENGTH, CAVE_WIDTH } from './wumpus_world/constants';
 
 class Board extends React.Component {
   constructor(props) {
     super(props);
-    this.board = initialize();
+    this.board = randomCaveGeneration(1,3,4);
   }
 
   render() {
