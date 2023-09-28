@@ -69,7 +69,7 @@ function addDirection_Action(cave, path) {
         let [currentPositionY, currentPositionX] = [path[i][0], path[i][1]];
         let action = null, grab = null, move = null;
 
-        if (cave[currentPositionY][currentPositionX].includes(constants.GOLD_IS_GRABBED)) {
+        if (cave[currentPositionY][currentPositionX].includes(constants.GOLD)) {
             grab = true;
         }
         else grab = false;
@@ -78,7 +78,7 @@ function addDirection_Action(cave, path) {
         if (cave[currentPositionY][currentPositionX].includes(constants.WUMPUS) || cave[currentPositionY][currentPositionX].includes(constants.PIT)) {
             action = 'DIE';
         }
-        else if (i + 1 < length && cave[path[i + 1][0]][path[i + 1][1]].includes(constants.DEAD_WUMPUS)) action = 'SHOOT';
+        else if (i + 2 == length && cave[path[i + 1][0]][path[i + 1][1]].includes(constants.DEAD_WUMPUS)) action = 'SHOOT';
         else action = "NO_ACTION";
 
         if (i + 1 < length) {
@@ -99,8 +99,6 @@ function addDirection_Action(cave, path) {
 function generatePath(knowledgeBase, startPositionY, startPositionX, destinationY, destinationX) {
     knowledgeBase[destinationY][destinationX].visited = true;
     let caveMatrix = findSafeRooms(knowledgeBase);
-    let isKilled = false;
-    // console.log("caveMatrix=",caveMatrix)
 
     if (knowledgeBase[destinationY][destinationX].wumpusProbability == 1 || knowledgeBase[destinationY][destinationX].pitProbability == 1) {
         caveMatrix[destinationY][destinationX] = 1;     // making is safe so that path can be generated (When Probabilistic decision gona be wrong)

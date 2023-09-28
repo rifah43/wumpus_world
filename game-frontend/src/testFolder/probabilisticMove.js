@@ -1,38 +1,3 @@
-const CaveBoard = require('./cave.js');
-const { WUMPUS, PIT, STENCH } = require('./constants.js');
-
-function printCave(knowledgeBase) {
-    for (let i = 0; i < 10; i++) {
-        let line = '';
-        for (let j = 0; j < 10; j++) {
-            let element = ''
-            if (knowledgeBase[i][j].pitProbability != null) element = element + "p=" + String(knowledgeBase[i][j].pitProbability);
-            else element = element + "p=N";
-
-            if (knowledgeBase[i][j].wumpusProbability != null) element = element + " w=" + String(knowledgeBase[i][j].wumpusProbability);
-            else element = element + " p=N";
-
-            if (knowledgeBase[i][j].visited == true) element = element + " v=T";
-            else element = element + " v=F";
-
-            line = line + element.padEnd(15, " ");
-        }
-        console.log(line);
-    }
-    console.log();
-}
-
-function getProbability(knowledgeBase, length, width, positionY, positionX, perceivation) {
-    let temp = 0;
-
-    if (positionY > 0 && knowledgeBase[positionY - 1][positionX][perceivation] === true) temp++;
-    if (positionY + 1 < length && knowledgeBase[positionY + 1][positionX][perceivation] === true) temp++;
-    if (positionX > 0 && knowledgeBase[positionY][positionX - 1][perceivation] === true) temp++;
-    if (positionX + 1 < width && knowledgeBase[positionY][positionX + 1][perceivation] === true) temp++
-
-    return temp / 4;
-}
-
 function isAdjRoomVisited(knowledgeBase, length, width, positionY, positionX) {
     if (positionY > 0 && knowledgeBase[positionY - 1][positionX].visited === true ||
         positionY + 1 < length && knowledgeBase[positionY + 1][positionX].visited === true ||
@@ -69,7 +34,7 @@ function getNextAction(probabilityArray, numberOfArrow, currentPositionY, curren
     tempList = [];
     if (numberOfArrow > 0) {
         for (let i = 0; i < length; i++) {
-            if (probabilityArray[0].pW >= 0.5) {
+            if (probabilityArray[i].pW >= 0.5) {
                 if (tempList.length ==0 || probabilityArray[i].pW == tempList[0].riskOfWumpus) {
                     tempList.push({ action: "SHOOT", riskOfWumpus: probabilityArray[i].pW, riskOfPit: probabilityArray[i].pP, positionY: probabilityArray[i].y, positionX: probabilityArray[i].x });
                 }
@@ -113,14 +78,11 @@ function getAllUnvisitedRoomsProbaility(knowledgeBase) {
     let i, j;
     let length = knowledgeBase.length;
     let width = knowledgeBase[0].length;
-    // const probabilityMatrix = Array.from({ length: length }, () => Array(width).fill(null));
     let probabilityArray = []
-    // console.log(knowledgeBase)
 
     for (i = 0; i < length; i++) {
         for (j = 0; j < width; j++) {
-            if (!knowledgeBase[i][j].visited && isAdjRoomVisited(knowledgeBase, length, width, i, j)
-            && knowledgeBase[i][j].wumpusProbability != 1 && knowledgeBase[i][j].pitProbability != 1) {
+            if (!knowledgeBase[i][j].visited && isAdjRoomVisited(knowledgeBase, length, width, i, j)) {
                 probabilityArray.push({ pW: knowledgeBase[i][j].wumpusProbability, pP: knowledgeBase[i][j].pitProbability, y: i, x: j });
             }
 
@@ -131,7 +93,8 @@ function getAllUnvisitedRoomsProbaility(knowledgeBase) {
 
 function makeProbabilisticMove(knowledgeBase, cave, numberOfArrow, currentPositionY, currentPositionX) {
     let temp = getAllUnvisitedRoomsProbaility(knowledgeBase);
-    return getNextAction(temp, numberOfArrow, currentPositionY, currentPositionX);
+    // console.log(temp)
+    return [getNextAction(temp, numberOfArrow, currentPositionY, currentPositionX), temp];
 }
 
 module.exports = {

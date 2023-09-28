@@ -1,15 +1,14 @@
 const constants = require('./constants.js');
-const CaveBoard = require('./cave.js');
 const Path = require('./path.js');
 const ProbabilisticMove = require('./probabilisticMove.js');
 const KnowledgeBase = require('./knowledgeBase.js');
 
 function isWumpusInAdj(cave, i, j) {
     if (
-        (i > 0 && cave[i - 1][j] === constants.WUMPUS) ||
-        (i < cave.length - 1 && cave[i + 1][j] === constants.WUMPUS) ||
-        (j > 0 && cave[i][j - 1] === constants.WUMPUS) ||
-        (j < cave[0].width - 1 && cave[i][j + 1] === constants.WUMPUS)
+        (i > 0 && cave[i - 1][j].includes(constants.WUMPUS)) ||
+        (i+1 < cave.length && cave[i + 1][j].includes(constants.WUMPUS)) ||
+        (j > 0 && cave[i][j - 1].includes(constants.WUMPUS)) ||
+        (j+1 < cave[0].length && cave[i][j + 1].includes(constants.WUMPUS))
     )
         return true;
     else
@@ -92,17 +91,12 @@ function killWumpus(cave, positionY, positionX, wumpusPositionY, wumpusPositionX
         if (actualWumpusPositionY == wumpusPositionY && actualWumpusPositionX == wumpusPositionX)
             return [cave, true];
     }
-    else
-        return [cave, false];
+    return [cave, false];
 }
 
 function AI_move_By_Propositional_logic(knowledgeBase, cave, numberOfArrors, currentPositionY, currentPositionX) {
-    // const knowledgeBase
-    // CaveBoard.printCave(cave);
-    // console.log(knowledgeBase)
-    const move = ProbabilisticMove.makeProbabilisticMove(knowledgeBase, cave, numberOfArrors, currentPositionY, currentPositionX);
-    // console.log(currentPositionY, currentPositionX, move.positionY, move.positionX);
-    // console.log(move)
+    const [move,possibleActions] = ProbabilisticMove.makeProbabilisticMove(knowledgeBase, cave, numberOfArrors, currentPositionY, currentPositionX);
+    let direction_Action = []
 
     if (move.action == "SHOOT") {
         let path = Path.generatePath(knowledgeBase, currentPositionY, currentPositionX, move.positionY, move.positionX);
@@ -112,48 +106,38 @@ function AI_move_By_Propositional_logic(knowledgeBase, cave, numberOfArrors, cur
 
         if (temp[1]) {
             //if wumpusis killed
-            knowledgeBase = KnowledgeBase.updateFullKnowledgebase(cave, knowledgeBase, move.positionY, move.positionX);
+            knowledgeBase = KnowledgeBase.update(cave, knowledgeBase, move.positionY, move.positionX);
         } else {
             knowledgeBase[move.positionY][move.positionX].wumpusProbability = 0;
         }
 
         if (knowledgeBase[move.positionY][move.positionX].pitProbability == 0 || knowledgeBase[move.positionY][move.positionX].wumpusProbability == 0) {
             knowledgeBase[move.positionY][move.positionX].visited = true;
-            const direction_Action = Path.addDirection_Action(cave, path)
+            direction_Action = Path.addDirection_Action(cave, path)
             direction_Action[direction_Action.length - 2].probabilityOfKilling = move.riskOfWumpus;
-            return [knowledgeBase, cave, direction_Action];
         }
         // if agent see pit in the next room after shooting the arrow then it will again try the best move 
         else {
             path.pop();
-            const direction_Action = Path.addDirection_Action(cave, path)
+            direction_Action = Path.addDirection_Action(cave, path)
             const length = direction_Action.length;
             // as agent make a shoot but did not make a move
             direction_Action[length - 1].action = "SHOOT";
             direction_Action[length - 1].probabilityOfKilling = move.riskOfWumpus;
-            direction_Action[length - 1].move = "NULL";
-            return [knowledgeBase, cave, direction_Action];
         }
     }
     else {
         // if it's a normal move
         knowledgeBase = KnowledgeBase.update(cave, knowledgeBase, move.positionY, move.positionX);
         let path = Path.generatePath(knowledgeBase, currentPositionY, currentPositionX, move.positionY, move.positionX);
-        // console.log(path)
-        const direction_Action = Path.addDirection_Action(cave, path)
+        direction_Action = Path.addDirection_Action(cave, path)
         const length = direction_Action.length;
         direction_Action[length - 1].riskOfWumpus = move.riskOfWumpus;
         direction_Action[length - 1].riskOfPit = move.riskOfPit;
-        return [knowledgeBase, cave, direction_Action];
     }
-}
 
-// AI_move_By_Propositional_logic(CaveBoard.randomCaveGeneration(4, 8, 7))
-// AI_move_By_Propositional_logic(CaveBoard.initialize())
-// CaveBoard.printCave(cave)
-// printCave();
-// CaveBoard.printCave(CaveBoard.initialize());
-// console.log(CaveBoard.numberOfGolds(CaveBoard.initialize()))
+    return [knowledgeBase, cave, direction_Action,possibleActions];
+}
 
 module.exports = {
     AI_move_By_Propositional_logic
