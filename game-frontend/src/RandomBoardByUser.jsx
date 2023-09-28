@@ -7,7 +7,6 @@ const RandomBoardByUser = () => {
     const [pit, setPit] = useState(0);
 
     useEffect(() => {
-        console.log(gold, wumpus, pit);
         if (gold > 0 && wumpus > 0 && pit > 0){
             randomCaveGeneration(gold, wumpus, pit);
         }

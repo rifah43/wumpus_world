@@ -1,9 +1,9 @@
 import React,  {useState} from 'react';
 import './App.css';
 import Board from './Board'; 
-import AiMove from './AiMove'; 
 import MainBoard from './MainBoard';
 import CSVParser from './CSVParser';
+import AiMove from './AiMove';
 import { useSpring, animated } from 'react-spring';
 import RandomBoardByUser from './RandomBoardByUser';
 

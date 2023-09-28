@@ -1,17 +1,15 @@
 import React from 'react';
 import "./Board.css";
-import { initialize, setBoard } from './wumpus_world/cave';
-import { AGENT, CAVE_LENGTH, CAVE_WIDTH } from './wumpus_world/constants';
-import {AgentMoves} from "./AiMove";
+import {  mainboard_initialize } from './wumpus_world/cave';
+import { AGENT, CAVE_LENGTH, CAVE_WIDTH, WUMPUS, GOLD, PIT, STENCH, BREEZE } from './wumpus_world/constants';
 
 class MainBoard extends React.Component {
   constructor(props) {
     super(props);
-    this.board = initialize();
-    setBoard(this.board);
+    this.board = mainboard_initialize();
   }
 
-  render() {
+  render() {  
     const rows = CAVE_LENGTH;
     const cols = CAVE_WIDTH;
     const cells = [];
@@ -44,10 +42,17 @@ class MainBoard extends React.Component {
     if (cellData[0] === AGENT) {
       content.push(<img key="agent" src="/images/agent.gif" alt="Agent" />);
       // content.push(<img key="ok" src="/images/opened.gif" alt="Ok" />);
-    }  else {
-      // Default case
-      content.push(<img key="closed" src="/images/closed.png" alt="Closed" />);
-    }
+    }  if (cellData === WUMPUS) {
+      content.push(<img key="wumpus" src="/images/wumpus.gif" alt="Wumpus" className="fg"/>);
+    }  if (cellData === GOLD) {
+      content.push(<img key="gold" src="/images/gold.gif" alt="Gold" className="fg" />);
+    }  if (cellData === PIT) {
+      content.push(<img key="pit" src="/images/pit.png" alt="Pit"  className="fg" />);
+    }  if (cellData === STENCH) {
+      content.push(<img key="stench" src="/images/stench.png" alt="Stench" className="fg" />);
+    } if (cellData === BREEZE) {
+      content.push(<img key="breeze" src="/images/breeze.png" alt="Breeze" className="fg"/>);
+    } 
 
     return <div className="cell-content">{content}</div>;
   }

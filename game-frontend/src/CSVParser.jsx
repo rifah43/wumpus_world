@@ -58,7 +58,6 @@ const CSVParser = ({onDataParsed}) => {
         Papa.parse(csvText, {
           complete: (result) => {
             onDataParsed(result.data);
-            
             board_data(result.data);
           },
           header: false, // Set to true if CSV has header row

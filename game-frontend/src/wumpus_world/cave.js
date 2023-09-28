@@ -65,22 +65,44 @@ function initialize() {
         console.log("Generated Cave");
         return addPerceivation(generated_cave);
     }
-    let cave = [
-        [AGENT, null, WUMPUS, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null, WUMPUS, null],
-        [PIT, null, WUMPUS, null, PIT, null, GOLD, null, null, null],
-        [null, null, null, null, null, null, null, null, null, null],
-        [null, null, WUMPUS, null, null, null, null, null, PIT, null],
-        [null, null, null, GOLD, null, null, WUMPUS, null, null, null],
-        [null, null, null, null, null, null, null, null, null, WUMPUS],
-        [null, PIT, null, null, null, null, null, null, null, null],
-        [null, null, null, GOLD, null, null, null, GOLD, null, null],
-        [null, null, null, null, null, PIT, null, null, PIT, null]
-    ];
+    else{
+        console.log("Random Cave");
+        return randomCaveGeneration(3, 5, 3);
+    }
 
-    // return cave
+    // let cave = [
+    //     [AGENT, null, WUMPUS, null, null, null, null, null, null, null],
+    //     [null, null, null, null, null, null, null, null, WUMPUS, null],
+    //     [PIT, null, WUMPUS, null, PIT, null, GOLD, null, null, null],
+    //     [null, null, null, null, null, null, null, null, null, null],
+    //     [null, null, WUMPUS, null, null, null, null, null, PIT, null],
+    //     [null, null, null, GOLD, null, null, WUMPUS, null, null, null],
+    //     [null, null, null, null, null, null, null, null, null, WUMPUS],
+    //     [null, PIT, null, null, null, null, null, null, null, null],
+    //     [null, null, null, GOLD, null, null, null, GOLD, null, null],
+    //     [null, null, null, null, null, PIT, null, null, PIT, null]
+    // ];
+
+    // // return cave
+    // return addPerceivation(cave);
+}
+
+function mainboard_initialize() {
+    let cave = [];
+    for(let i=0;i<CAVE_LENGTH;i++) {
+        let tempRow = []
+        for(let j=0;j<CAVE_WIDTH;j++) {
+            let temp = [];
+            temp.push(null);
+            tempRow.push(temp[0]);
+        }
+        cave.push(tempRow);
+    }
+    cave[0][0] = AGENT;
+    
     return addPerceivation(cave);
 }
+
 
 function getTotalNumberOfGold(cave) {
     let temp=0;
@@ -183,12 +205,13 @@ function getBoard(){
     return generated_board;
 }
 
-function setBoard(board){
-    
+function setBoard(board){    
     generated_board = board;
-    // console.log(generated_board);
+    console.log(generated_board);
 }
 
 module.exports = {
-    printCave, board_data, initialize, isPitInAdj, isWumpusInAdj, getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration, setBoard, getBoard
+    printCave, board_data, initialize, isPitInAdj, isWumpusInAdj, 
+    getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration, 
+    setBoard, getBoard, mainboard_initialize
 }
