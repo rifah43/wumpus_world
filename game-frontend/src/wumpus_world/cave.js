@@ -163,8 +163,9 @@ function randomCaveGeneration(numberOfGold, numberOfWumpus, numberOfPit) {
         newCave[y][x] = PIT
     }
 
-    console.log("Random Cave" + newCave);
-    return addPerceivation(newCave)
+    generated_cave = newCave;
+    
+    return addPerceivation(generated_cave);
 }
 
 function getRandomCoordinate(cave, cave_length, cave_width) {

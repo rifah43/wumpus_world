@@ -1,19 +1,17 @@
 import React , {useState, useEffect} from 'react'
-import { board_data, randomCaveGeneration} from './wumpus_world/cave.js'
+import { randomCaveGeneration} from './wumpus_world/cave.js'
 
 const RandomBoardByUser = () => {
     const [gold, setGold] = useState(0);
     const [wumpus, setWumpus] = useState(0);
     const [pit, setPit] = useState(0);
 
-    const handleRandomBoard = () => {
-        console.log(gold, wumpus, pit);
-        randomCaveGeneration(gold, wumpus, pit);
-    }
-
     useEffect(() => {
-        if (gold > 0 && wumpus > 0 && pit > 0)handleRandomBoard();
-    }, [])
+        console.log(gold, wumpus, pit);
+        if (gold > 0 && wumpus > 0 && pit > 0){
+            randomCaveGeneration(gold, wumpus, pit);
+        }
+    }, [gold, wumpus, pit])
 
   return (
     <div className="input-container">
