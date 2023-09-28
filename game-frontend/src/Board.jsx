@@ -7,7 +7,7 @@ import { AI_move_By_Propositional_logic } from './wumpus_world/AI_moves';
 class Board extends React.Component {
   constructor(props) {
     super(props);
-    this.board = randomCaveGeneration(1,3,4);
+    this.board = randomCaveGeneration(3,6,4);
     console.log(AI_move_By_Propositional_logic(this.board));
   }
 
