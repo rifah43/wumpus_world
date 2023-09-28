@@ -164,14 +164,9 @@ function randomCaveGeneration(numberOfGold, numberOfWumpus, numberOfPit) {
         newCave[y][x] = PIT
     }
 
-<<<<<<< HEAD
     generated_cave = newCave;
     
     return addPerceivation(generated_cave);
-=======
-    newCave[0][0] = AGENT;
-    return addPerceivation(newCave)
->>>>>>> ea79000f3bfd59f100c376fb84e7b9a1f3193593
 }
 
 function getRandomCoordinate(cave, cave_length, cave_width) {
