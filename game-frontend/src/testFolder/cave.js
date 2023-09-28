@@ -1,12 +1,11 @@
 const { WUMPUS, PIT, AGENT, GOLD, CAVE_LENGTH, CAVE_WIDTH, STENCH, BREEZE } = require('./constants.js')
 
-var generated_cave = [];
-var generated_board= [];
+
 function addPerceivation(cave) {
     let newCave = [];
-    for(let i=0;i<CAVE_LENGTH;i++) {
+    for (let i = 0; i < CAVE_LENGTH; i++) {
         let tempRow = []
-        for(let j=0;j<CAVE_WIDTH;j++) {
+        for (let j = 0; j < CAVE_WIDTH; j++) {
             let temp = [];
             if (isWumpusInAdj(cave, i, j)) {
                 temp.push(STENCH);
@@ -14,13 +13,13 @@ function addPerceivation(cave) {
             if (isPitInAdj(cave, i, j)) {
                 temp.push(BREEZE);
             }
-            if(cave[i][j] === GOLD){
+            if (cave[i][j] === GOLD) {
                 temp.push(GOLD);
             }
-            if(cave[i][j] === WUMPUS){
+            if (cave[i][j] === WUMPUS) {
                 temp.push(WUMPUS);
             }
-            if(cave[i][j] === PIT){
+            if (cave[i][j] === PIT) {
                 temp.push(PIT);
             }
 
@@ -32,50 +31,32 @@ function addPerceivation(cave) {
     return newCave;
 }
 
-function board_data(data){
-    for(let i=0;i<CAVE_LENGTH;i++) {
-        let tempRow = []
-        for(let j=0;j<CAVE_WIDTH;j++) {
-            let temp = [];
-            if(data[i][j].includes('GOLD')){
-                temp.push(GOLD);
-            }
-            else if(data[i][j].includes('WUMPUS')){
-                temp.push(WUMPUS);
-            }
-            else if(data[i][j].includes('PIT')){
-                temp.push(PIT);
-            }
-            else if(data[i][j].includes('AGENT')){
-                temp.push(AGENT);
-            }
-            else{
-                temp.push(null);
-            }
-            tempRow.push(temp[0]);
-        }
-        generated_cave.push(tempRow);
-        console.log(tempRow);
-    }
-}
-
 
 function initialize() {
-    if(generated_cave.length !== 0){
-        console.log("Generated Cave");
-        return addPerceivation(generated_cave);
-    }
+    // let cave = [
+    //     [AGENT, null, WUMPUS, null, null, null, null, null, null, null],
+    //     [null, null, null, null, null, null, null, null, WUMPUS, null],
+    //     [PIT, null, WUMPUS, null, PIT, null, GOLD, null, null, null],
+    //     [null, null, null, null, null, null, null, null, null, null],
+    //     [null, null, WUMPUS, null, null, null, null, null, PIT, null],
+    //     [null, null, null, GOLD, null, null, WUMPUS, null, null, null],
+    //     [null, null, null, null, null, null, null, null, null, WUMPUS],
+    //     [null, PIT, null, null, null, null, null, null, null, null],
+    //     [null, null, null, GOLD, null, null, null, GOLD, null, null],
+    //     [null, null, null, null, null, PIT, null, null, PIT, null]
+    // ];
+
     let cave = [
-        [AGENT, null, WUMPUS, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null, WUMPUS, null],
-        [PIT, null, WUMPUS, null, PIT, null, GOLD, null, null, null],
+        [AGENT, null, null, null, null, null, null, null, null, null],
+        [null, null, WUMPUS, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null, null, null],
-        [null, null, WUMPUS, null, null, null, null, null, PIT, null],
-        [null, null, null, GOLD, null, null, WUMPUS, null, null, null],
-        [null, null, null, null, null, null, null, null, null, WUMPUS],
-        [null, PIT, null, null, null, null, null, null, null, null],
-        [null, null, null, GOLD, null, null, null, GOLD, null, null],
-        [null, null, null, null, null, PIT, null, null, PIT, null]
+        [WUMPUS, null, PIT, null, null, null, null, WUMPUS, null, null],
+        [null, null, WUMPUS, null, null, WUMPUS, null, null, null, null],
+        [null, GOLD, null, null, null, null, null, null, null, null],
+        [null, null, null, PIT, null, null, null, null, null, GOLD],
+        [null, WUMPUS, null, null, PIT, null, null, null, null, PIT],
+        [WUMPUS, null, null, PIT, null, null, null, null, PIT, null],
+        [PIT, GOLD, null, null, GOLD, null, null, WUMPUS, null, null]
     ];
 
     // return cave
@@ -83,10 +64,10 @@ function initialize() {
 }
 
 function getTotalNumberOfGold(cave) {
-    let temp=0;
-    for(let i=0;i<CAVE_LENGTH;i++) {
-        for(let j=0;j<CAVE_WIDTH;j++) {
-            if (cave[i][j].includes(GOLD)){
+    let temp = 0;
+    for (let i = 0; i < CAVE_LENGTH; i++) {
+        for (let j = 0; j < CAVE_WIDTH; j++) {
+            if (cave[i][j].includes(GOLD)) {
                 temp++;
             }
         }
@@ -95,10 +76,10 @@ function getTotalNumberOfGold(cave) {
 }
 
 function getTotalNumberOfWumpus(cave) {
-    let temp=0;
-    for(let i=0;i<CAVE_LENGTH;i++) {
-        for(let j=0;j<CAVE_WIDTH;j++) {
-            if (cave[i][j].includes(WUMPUS)){
+    let temp = 0;
+    for (let i = 0; i < CAVE_LENGTH; i++) {
+        for (let j = 0; j < CAVE_WIDTH; j++) {
+            if (cave[i][j].includes(WUMPUS)) {
                 temp++;
             }
         }
@@ -122,9 +103,9 @@ function printCave(cave) {
 function isWumpusInAdj(cave, i, j) {
     if (
         (i > 0 && cave[i - 1][j] === WUMPUS) ||
-        (i < CAVE_LENGTH-1 && cave[i + 1][j] === WUMPUS) ||
+        (i < CAVE_LENGTH - 1 && cave[i + 1][j] === WUMPUS) ||
         (j > 0 && cave[i][j - 1] === WUMPUS) ||
-        (j < CAVE_WIDTH-1 && cave[i][j + 1] === WUMPUS)
+        (j < CAVE_WIDTH - 1 && cave[i][j + 1] === WUMPUS)
     )
         return true;
     else
@@ -134,9 +115,9 @@ function isWumpusInAdj(cave, i, j) {
 function isPitInAdj(cave, i, j) {
     if (
         (i > 0 && cave[i - 1][j] === PIT) ||
-        (i < CAVE_LENGTH-1 && cave[i + 1][j] === PIT) ||
+        (i < CAVE_LENGTH - 1 && cave[i + 1][j] === PIT) ||
         (j > 0 && cave[i][j - 1] === PIT) ||
-        (j < CAVE_WIDTH-1 && cave[i][j + 1] === PIT)
+        (j < CAVE_WIDTH - 1 && cave[i][j + 1] === PIT)
     )
         return true;
     else
@@ -164,14 +145,8 @@ function randomCaveGeneration(numberOfGold, numberOfWumpus, numberOfPit) {
         newCave[y][x] = PIT
     }
 
-<<<<<<< HEAD
-    generated_cave = newCave;
-    
-    return addPerceivation(generated_cave);
-=======
     newCave[0][0] = AGENT;
     return addPerceivation(newCave)
->>>>>>> ea79000f3bfd59f100c376fb84e7b9a1f3193593
 }
 
 function getRandomCoordinate(cave, cave_length, cave_width) {
@@ -184,16 +159,6 @@ function getRandomCoordinate(cave, cave_length, cave_width) {
     else return [y,x];
 }
 
-function getBoard(){
-    return generated_board;
-}
-
-function setBoard(board){
-    
-    generated_board = board;
-    // console.log(generated_board);
-}
-
 module.exports = {
-    printCave, board_data, initialize, isPitInAdj, isWumpusInAdj, getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration, setBoard, getBoard
+    printCave, initialize, isPitInAdj, isWumpusInAdj, getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration
 }
