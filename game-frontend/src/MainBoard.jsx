@@ -1,12 +1,14 @@
 import React from 'react';
 import "./Board.css";
-import { initialize } from './wumpus_world/cave';
+import { initialize, setBoard } from './wumpus_world/cave';
 import { AGENT, CAVE_LENGTH, CAVE_WIDTH } from './wumpus_world/constants';
+import {AgentMoves} from "./AiMove";
 
 class MainBoard extends React.Component {
   constructor(props) {
     super(props);
     this.board = initialize();
+    setBoard(this.board);
   }
 
   render() {

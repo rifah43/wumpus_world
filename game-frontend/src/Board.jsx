@@ -29,7 +29,7 @@ class Board extends React.Component {
 
             {
               this.board[y][x].map((cellData, index) => {
-                console.log(cellData+ ' ' + index);
+                // console.log(cellData+ ' ' + index);
                 return this.renderCellContent(cellData);
               })
             }

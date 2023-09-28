@@ -92,7 +92,7 @@ function addDirection_Action(cave, path) {
 
         moveList.push({ move: move, action: action, grab: grab })
     }
-    return moveList;
+    return {cave,moveList};
 }
 
 

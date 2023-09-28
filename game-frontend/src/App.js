@@ -1,6 +1,7 @@
 import React,  {useState} from 'react';
 import './App.css';
 import Board from './Board'; 
+import AiMove from './AiMove'; 
 import MainBoard from './MainBoard';
 import CSVParser from './CSVParser';
 import { useSpring, animated } from 'react-spring';
@@ -35,6 +36,7 @@ function App() {
         {clicked ? <div className="board-container glowing-text">
           <div className='Board'><h3>Inspection Board</h3><Board /></div>
           <div className='MainBoard'><h3>Main Board</h3><MainBoard/></div>
+          <div><AiMove/></div>
           </div> : 
           (
             <div>
