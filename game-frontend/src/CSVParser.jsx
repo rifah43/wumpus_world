@@ -1,6 +1,7 @@
 import React from 'react';
 import Papa from 'papaparse';
 import { board_data} from './wumpus_world/cave.js'
+import { GOLD, PIT, WUMPUS } from './testFolder/wumpus_world/constants.js';
 
 const CSVParser = ({onDataParsed}) => {
   const textparseascsv = async(text) => {
@@ -11,13 +12,13 @@ const CSVParser = ({onDataParsed}) => {
     for (let i = 0; i < rows.length; i++) {
       for(let j = 0; j < rows[i].length; j++) {
         if (rows[i][j] === 'W') {
-          data_cols.push('WUMPUS');
+          data_cols.push(WUMPUS);
         } else if (rows[i][j] === 'P') {
-          data_cols.push('PIT');
+          data_cols.push(PIT);
         } else if (rows[i][j] === 'G') {
-          data_cols.push('GOLD');
+          data_cols.push(GOLD);
         } else {
-          data_cols.push('null');
+          data_cols.push(null);
         }
       }
       data_rows.push(data_cols);

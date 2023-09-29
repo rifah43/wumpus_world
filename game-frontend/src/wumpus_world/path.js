@@ -64,6 +64,8 @@ function findSafeRooms(knowledgeBase) {
 function addDirection_Action(cave, path) {
     let i, length = path.length;
     let moveList = [];
+    let ylist= [];
+    let xlist= [];
 
     for (i = 0; i < length; i++) {
         let [currentPositionY, currentPositionX] = [path[i][0], path[i][1]];
@@ -88,11 +90,14 @@ function addDirection_Action(cave, path) {
             else if (nextMoveX < currentPositionX) move = "LEFT";
             else if (nextMoveX > currentPositionX) move = "RIGHT";
             else move = null;
+            ylist.push(nextMoveY);
+            xlist.push(nextMoveX);
         }
 
         moveList.push({ move: move, action: action, grab: grab })
+        
     }
-    return moveList;
+    return {moveList, ylist, xlist};
 }
 
 

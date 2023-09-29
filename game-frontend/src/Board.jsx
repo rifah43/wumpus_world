@@ -1,15 +1,15 @@
 import React from 'react';
 import './Board.css'; 
-import {  initialize, randomCaveGeneration } from './wumpus_world/cave';
 import { WUMPUS, PIT, GOLD, STENCH, BREEZE, AGENT, CAVE_LENGTH, CAVE_WIDTH } from './wumpus_world/constants';
-import { AI_move_By_Propositional_logic } from './wumpus_world/AI_moves';
+import {newCave } from './testFolder/wumpus_world/indexJS';
 
 class Board extends React.Component {
   constructor(props) {
     super(props);
-    this.board = initialize();
-    // this.board = randomCaveGeneration(3,6,4);
-    // console.log(AI_move_By_Propositional_logic(this.board));
+  }
+
+  componentDidMount() {
+    console.log(newCave);
   }
 
   render() {
@@ -26,15 +26,11 @@ class Board extends React.Component {
             className="cell"
             id={cellId}
           >
-
             {
-              this.board[y][x].map((cellData, index) => {
-                // console.log(cellData+ ' ' + index);
+              newCave[y][x].map((cellData) => {
                 return this.renderCellContent(cellData);
               })
             }
-            
-            
           </div>
         );
       }

@@ -1,7 +1,6 @@
 const { WUMPUS, PIT, AGENT, GOLD, CAVE_LENGTH, CAVE_WIDTH, STENCH, BREEZE } = require('./constants.js')
 
 var generated_cave = [];
-var generated_board= [];
 function addPerceivation(cave) {
     let newCave = [];
     for(let i=0;i<CAVE_LENGTH;i++) {
@@ -202,16 +201,11 @@ function getRandomCoordinate(cave, cave_length, cave_width) {
 }
 
 function getBoard(){
-    return generated_board;
+    return generated_cave;
 }
 
-function setBoard(board){    
-    generated_board = board;
-    console.log(generated_board);
-}
 
 module.exports = {
     printCave, board_data, initialize, isPitInAdj, isWumpusInAdj, 
-    getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration, 
-    setBoard, getBoard, mainboard_initialize
+    getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration, getBoard, mainboard_initialize
 }

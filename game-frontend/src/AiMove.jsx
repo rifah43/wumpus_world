@@ -1,48 +1,110 @@
-import React from 'react';
-import { AI_move_By_Propositional_logic } from './wumpus_world/AI_moves';
-import { getBoard } from './wumpus_world/cave';
+import React, { Component } from 'react';
+import { AI_move_By_Propositional_logic } from './testFolder/wumpus_world/AI_moves';
+import { getTotalNumberOfGold, getTotalNumberOfWumpus } from './testFolder/wumpus_world/cave';
+import { initializeKnowledgeBase, update } from './testFolder/wumpus_world/knowledgeBase';
+import { newCave } from './testFolder/wumpus_world/indexJS';
 
-class AgentMoves extends React.Component {
+class AgentMoves extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMove: null,
-      currentAction: null,
-      currentGrab: false,
+      moves: [],
+      currentPositionY: 0,
+      currentPositionX: 0,
+      collectedGold: 0,
+      numberOfArrows: 0,
+      knowledgeBase: null,
+      totalPoint: 0,
     };
-    this.board = getBoard();
-    console.log(this.board);
+    this.board = newCave;
+    this.hasMounted = false;
+  }
+
+  calculatePoint(action, grab){
+    let points=0;
+    if(grab){
+      points+=1000;
+    }
+    if(action === 'SHOOT'){
+      points-=10;
+    }else if(action !== 'SHOOT'){
+      points-=1;
+    }
+
+    return points
   }
 
   async componentDidMount() {
     try {
-      const moves = await AI_move_By_Propositional_logic(this.board);
-      let {move, action, grab} = moves[0];
-      console.log(moves, move, action, grab);
-      this.setState({
-        currentMove: move.toString(),
-        currentAction: action.toString(),
-        currentGrab: grab,
-      });
+      if (!this.hasMounted) {
+        this.hasMounted = true;
+        let continueUpdating = true;
+        console.log(newCave);
+        let knowledgeBase = initializeKnowledgeBase(this.board);
+        let numberOfArrows = getTotalNumberOfWumpus(this.board);
+        const maximumGold = getTotalNumberOfGold(this.board);
+        let collectedGold = 0;
+        let totalPoint = 0;
+
+        knowledgeBase = update(this.board, knowledgeBase, 0, 0);
+        let nextPositionY = 0;
+        let nextPositionX = 0;
+
+        while (continueUpdating) {
+          const [
+            updatedKnowledgeBase,
+            updatedCave,
+            allMoves,
+            possibleActions,
+            isWumpusKilled,
+          ] = AI_move_By_Propositional_logic(
+            knowledgeBase,
+            this.board,
+            numberOfArrows,
+            nextPositionY,
+            nextPositionX
+          );
+
+          knowledgeBase = updatedKnowledgeBase;
+          this.board = updatedCave;
+          const totalMoves = allMoves.length;
+          console.log(totalMoves);
+          this.setState((prevState) => ({
+            moves: allMoves,
+            currentPositionY: nextPositionY,
+            currentPositionX: nextPositionX,
+            collectedGold: prevState.collectedGold + (allMoves[totalMoves - 1].grab ? 1 : 0),
+            numberOfArrows: prevState.numberOfArrows - (allMoves[totalMoves - 1].action === 'SHOOT' ? 1 : 0),
+            knowledgeBase: updatedKnowledgeBase,
+            totalPoint: prevState.totalPoint + this.calculatePoint(allMoves[totalMoves - 1].action , allMoves[totalMoves - 1].grab),
+          }));
+
+          if (collectedGold === maximumGold) {
+            continueUpdating = false;
+          } else if (allMoves[totalMoves - 1].action === 'DIE') {
+            continueUpdating = false;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+      }
     } catch (err) {
       console.log(err);
     }
   }
 
   render() {
-    // this.componentDidMount();
-    const { currentMove, currentAction, currentGrab } = this.state;
+    const { moves, currentPositionY, currentPositionX, collectedGold, totalPoint } = this.state;
 
     return (
       <div>
         <h2>Agent Moves</h2>
-        <p>Current Move: {currentMove}</p>
-        <p>Current Action: {currentAction}</p>
-        <p>Current Grab: {currentGrab ? 'Yes' : 'No'}</p>
-        {/* Logic likhbo */}
+        <p>Current Position: ({currentPositionX}, {currentPositionY})</p>
+        <p>Collected Gold: {collectedGold}</p>
+        <p>Total Moves: {moves.length}</p>
+        <p>Total Points: {totalPoint}</p>
       </div>
     );
   }
 }
 
-export default AgentMoves ;
+export default AgentMoves;

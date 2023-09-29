@@ -1,6 +1,7 @@
 const constants = require('./constants.js');
 
 function initializeKnowledgeBase(cave) {
+    console.log(cave);
     const length = cave.length;
     const width = cave[0].length;
 
