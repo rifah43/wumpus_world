@@ -180,6 +180,10 @@ function getBoard(){
     return final_cave;
 }
 
+function setBoard(cave){
+    final_cave= cave;
+}
+
 module.exports = {
-    printCave, initialize, isPitInAdj, isWumpusInAdj,getBoard, getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration
+    printCave, setBoard, initialize, isPitInAdj, isWumpusInAdj,getBoard, getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration
 }

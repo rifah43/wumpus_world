@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { AI_move_By_Propositional_logic } from './testFolder/wumpus_world/AI_moves';
-import { getTotalNumberOfGold, getTotalNumberOfWumpus } from './testFolder/wumpus_world/cave';
+import { getTotalNumberOfGold, getTotalNumberOfWumpus, setBoard } from './testFolder/wumpus_world/cave';
 import { initializeKnowledgeBase, update } from './testFolder/wumpus_world/knowledgeBase';
 import { newCave } from './testFolder/wumpus_world/indexJS';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AGENT } from './testFolder/wumpus_world/constants';
 
 class AgentMoves extends Component {
   constructor(props) {
@@ -16,10 +17,11 @@ class AgentMoves extends Component {
       collectedGold: 0,
       numberOfArrows: 0,
       knowledgeBase: null,
-      totalPoint: 0,
+      totalPoint: 100,
     };
     this.board = newCave;
     this.hasMounted = false;
+    this.continueUpdating = true; // Add continueUpdating as a class variable
   }
 
   calculatePoint(action, grab) {
@@ -40,7 +42,6 @@ class AgentMoves extends Component {
     try {
       if (!this.hasMounted) {
         this.hasMounted = true;
-        let continueUpdating = true;
         let knowledgeBase = initializeKnowledgeBase(this.board);
         let numberOfArrows = getTotalNumberOfWumpus(this.board);
         const maximumGold = getTotalNumberOfGold(this.board);
@@ -51,7 +52,7 @@ class AgentMoves extends Component {
         let nextPositionY = 0;
         let nextPositionX = 0;
 
-        while (continueUpdating) {
+        while (this.continueUpdating) {
           const [
             updatedKnowledgeBase,
             updatedCave,
@@ -70,9 +71,9 @@ class AgentMoves extends Component {
           this.board = updatedCave;
           const totalMoves = allMoves.length;
 
-          await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
-
           for (let i = 0; i < totalMoves; i++) {
+            await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+
             const currentState = allMoves[i];
             
             if (currentState.action === 'SHOOT') {
@@ -99,6 +100,8 @@ class AgentMoves extends Component {
               collectedGold++;
               totalPoint += 1000;
             }
+            
+            // swapPos(this.state.currentPositionY, currentPositionX, nextPositionY, nextPositionX);
 
             this.setState({
               moves: allMoves,
@@ -112,13 +115,13 @@ class AgentMoves extends Component {
           }
 
           if (collectedGold === maximumGold) {
-            continueUpdating = false;
+            this.continueUpdating = false;
             toast.success('You won!', {
               position: 'top-center',
               autoClose: 2000,
             });
           } else if (allMoves[totalMoves - 1].action === 'DIE') {
-            continueUpdating = false;
+            this.continueUpdating = false;
             toast.error('Agent died with collected gold', {
               position: 'top-center',
               autoClose: 2000,
@@ -132,16 +135,15 @@ class AgentMoves extends Component {
   }
 
   render() {
-    console.log(this.state);
     const { moves, currentPositionY, currentPositionX, collectedGold, totalPoint } = this.state;
 
     return (
       <div>
         <ToastContainer />
         <h2>Agent Moves</h2>
-        <p>Current Position: ({currentPositionX}, {currentPositionY})</p>
+        <p>Current Position: ({currentPositionY}, {currentPositionX})</p>
         <p>Collected Gold: {collectedGold}</p>
-        <p>Total Moves: {moves.length}</p>
+        <p>Possible Moves: {moves.length}</p>
         <p>Total Points: {totalPoint}</p>
       </div>
     );

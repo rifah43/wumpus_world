@@ -3,7 +3,7 @@ const Move = require('./AI_moves.js')
 const KnowledgeBase = require('./knowledgeBase.js');
 
 
-let cave = CaveBoard.initialize();
+let cave = CaveBoard.getBoard();
 let newCave=cave;
 // CaveBoard.printCave(cave)
 let knowledgeBase = KnowledgeBase.initializeKnowledgeBase(cave)

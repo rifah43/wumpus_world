@@ -8,6 +8,10 @@ class Board extends React.Component {
     super(props);
   }
 
+  swapPos(py,px,ny,nx){
+
+  }
+
   componentDidMount() {
     console.log(newCave);
   }
