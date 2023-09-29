@@ -71,7 +71,7 @@ function addDirection_Action(cave, path) {
         let [currentPositionY, currentPositionX] = [path[i][0], path[i][1]];
         let action = null, grab = null, move = null;
 
-        if (cave[currentPositionY][currentPositionX].includes(constants.GOLD_IS_GRABBED)) {
+        if (i + 1 < length && cave[currentPositionY][currentPositionX].includes(constants.GOLD_IS_GRABBED)) {
             grab = true;
         }
         else grab = false;

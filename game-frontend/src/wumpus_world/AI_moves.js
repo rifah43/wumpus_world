@@ -404,7 +404,7 @@ function AI_move_By_Propositional_logic(cave) {
     return Path.addDirection_Action(cave, moveList);
 }
 
-// AI_move_By_Propositional_logic(CaveBoard.randomCaveGeneration(4, 8, 7))
+// AI_move_By_Propositional_logic(CaveBoard.randomCaveGeneration(10,10,4, 8, 7))
 // AI_move_By_Propositional_logic(CaveBoard.initialize())
 // CaveBoard.printCave(cave)
 // printCave();

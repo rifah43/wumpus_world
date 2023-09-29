@@ -9,10 +9,10 @@ function addPerceivation(cave) {
         let tempRow = []
         for (let j = 0; j < CAVE_WIDTH; j++) {
             let temp = [];
-            if (isWumpusInAdj(cave, i, j)) {
+            if (cave[i][j]  != WUMPUS && cave[i][j] !=PIT  && isWumpusInAdj(cave, i, j)) {
                 temp.push(STENCH);
             }
-            if (isPitInAdj(cave, i, j)) {
+            if (cave[i][j]  != WUMPUS && cave[i][j] !=PIT  && isPitInAdj(cave, i, j)) {
                 temp.push(BREEZE);
             }
             if (cave[i][j] === GOLD) {
@@ -70,7 +70,7 @@ function initialize() {
     // ];
 
     // return cave
-    return randomCaveGeneration(2, 3, 3);
+    return randomCaveGeneration(10, 10, 2, 3, 3);
 }
 
 function getTotalNumberOfGold(cave) {
@@ -134,22 +134,29 @@ function isPitInAdj(cave, i, j) {
         return false;
 }
 
-function randomCaveGeneration(numberOfGold, numberOfWumpus, numberOfPit) {
-    let newCave = Array.from({ length: CAVE_LENGTH }, () => Array(CAVE_WIDTH).fill(null));
-    let y,x;
+function randomCaveGeneration(cave_length, cave_width, numberOfGold, numberOfWumpus, numberOfPit) {
+    let newCave = Array.from({ length: cave_length }, () => Array(cave_width).fill(null));
+    let y,x, maximumItem = cave_length*cave_width;
 
     // Assigning Gold
     for (let i = 0; i < numberOfGold; i++) {
+        if(maximumItem <=0) break;
+
         [y,x] = getRandomCoordinate(newCave, CAVE_LENGTH, CAVE_WIDTH);
-        newCave[y][x] = GOLD
+        newCave[y][x] = GOLD;
+        maximumItem--;
     }
     // Assigning Wumpus
     for (let i = 0; i < numberOfWumpus; i++) {
+        if(maximumItem <=0) break;
+
         [y,x] = getRandomCoordinate(newCave, CAVE_LENGTH, CAVE_WIDTH);
         newCave[y][x] = WUMPUS
     }
     // Assigning Pit
     for (let i = 0; i < numberOfPit; i++) {
+        if(maximumItem <=0) break;
+        
         [y,x] = getRandomCoordinate(newCave, CAVE_LENGTH, CAVE_WIDTH);
         newCave[y][x] = PIT
     }
