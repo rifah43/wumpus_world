@@ -80,9 +80,9 @@ class AgentMoves extends Component {
           }));
 
           if (collectedGold === maximumGold) {
-            continueUpdating = false;
+            continueUpdating = false;// alert you won
           } else if (allMoves[totalMoves - 1].action === 'DIE') {
-            continueUpdating = false;
+            continueUpdating = false;// agent died with collected gold
           }
           await new Promise((resolve) => setTimeout(resolve, 2000));
         }
