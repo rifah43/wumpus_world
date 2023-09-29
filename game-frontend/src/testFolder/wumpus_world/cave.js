@@ -41,7 +41,7 @@ function board_data(data){
 function initialize() {
     if(generated_cave.length !== 0){
         console.log("Generated Cave");
-        return addPerceivation(generated_cave);
+        return generated_cave;
     }
     // let cave = [
     //     [AGENT, null, WUMPUS, null, null, null, null, null, null, null],
