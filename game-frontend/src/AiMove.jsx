@@ -5,13 +5,17 @@ import { initializeKnowledgeBase, update } from './testFolder/wumpus_world/knowl
 import { newCave } from './testFolder/wumpus_world/indexJS';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AGENT } from './testFolder/wumpus_world/constants';
+import Board from './Board';
+import MainBoard from './MainBoard';
+import './AiMove.css'; 
 
 class AgentMoves extends Component {
   constructor(props) {
     super(props);
     this.state = {
       moves: [],
+      prevPositionY: 0,
+      prevPositionX: 0,
       currentPositionY: 0,
       currentPositionX: 0,
       collectedGold: 0,
@@ -21,7 +25,7 @@ class AgentMoves extends Component {
     };
     this.board = newCave;
     this.hasMounted = false;
-    this.continueUpdating = true; // Add continueUpdating as a class variable
+    this.continueUpdating = true; 
   }
 
   calculatePoint(action, grab) {
@@ -72,7 +76,7 @@ class AgentMoves extends Component {
           const totalMoves = allMoves.length;
 
           for (let i = 0; i < totalMoves; i++) {
-            await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+            await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for .5 second
 
             const currentState = allMoves[i];
             
@@ -100,11 +104,12 @@ class AgentMoves extends Component {
               collectedGold++;
               totalPoint += 1000;
             }
-            
-            // swapPos(this.state.currentPositionY, currentPositionX, nextPositionY, nextPositionX);
+            // console.log(this.state.currentPositionY, this.state.currentPositionX, nextPositionY, nextPositionX);
 
             this.setState({
               moves: allMoves,
+              prevPositionY: this.state.currentPositionY,
+              prevPositionX: this.state.currentPositionX,
               currentPositionY: nextPositionY,
               currentPositionX: nextPositionX,
               collectedGold: collectedGold,
@@ -112,6 +117,7 @@ class AgentMoves extends Component {
               knowledgeBase: updatedKnowledgeBase,
               totalPoint: totalPoint,
             });
+
           }
 
           if (collectedGold === maximumGold) {
@@ -126,25 +132,43 @@ class AgentMoves extends Component {
               position: 'top-center',
               autoClose: 2000,
             });
+          } else if (allMoves[totalMoves - 1].action === 'SHOOT') {
+          this.continueUpdating = false;
+          toast.success('Wumpus is killed', {
+            position: 'top-center',
+            autoClose: 2000,
+          });
           }
         }
-      }
-    } catch (err) {
+    } }catch (err) {
       console.log(err);
     }
   }
 
   render() {
-    const { moves, currentPositionY, currentPositionX, collectedGold, totalPoint } = this.state;
+
 
     return (
       <div>
         <ToastContainer />
         <h2>Agent Moves</h2>
-        <p>Current Position: ({currentPositionY}, {currentPositionX})</p>
-        <p>Collected Gold: {collectedGold}</p>
-        <p>Possible Moves: {moves.length}</p>
-        <p>Total Points: {totalPoint}</p>
+        <p>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
+        <p>Collected Gold: {this.state.collectedGold}</p>
+        <p>Possible Moves: {this.state.moves.length}</p>
+        <p>Total Points: {this.state.totalPoint}</p>
+        <div className='Board'><h3>Inspection Board</h3><Board 
+              agentPositionY={this.state.prevPositionY} 
+              agentPositionX={this.state.prevPositionX} 
+              nextPositionY={this.state.currentPositionY}
+              nextPositionX={this.state.currentPositionX}
+              grab={this.state.moves.grab}
+        /></div>
+        <div className='MainBoard'><h3>Main Board</h3><MainBoard 
+              agentPositionY={this.state.prevPositionY} 
+              agentPositionX={this.state.prevPositionX} 
+              nextPositionY={this.state.currentPositionY}
+              nextPositionX={this.state.currentPositionX}
+              grab={this.state.moves.grab}/></div>
       </div>
     );
   }

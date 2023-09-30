@@ -70,7 +70,7 @@ function initialize() {
     // ];
 
     // return cave
-    return randomCaveGeneration(10, 10, 2, 3, 3);
+    return randomCaveGeneration(10, 10, 7, 3, 3);
 }
 
 function getTotalNumberOfGold(cave) {
