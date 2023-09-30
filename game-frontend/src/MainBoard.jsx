@@ -17,7 +17,7 @@ class MainBoard extends React.Component {
   }
 
   componentDidMount() {
-    console.log(newCave);
+    //console.log(newCave);
   }
 
   componentDidUpdate(prevProps) {
@@ -83,15 +83,11 @@ class MainBoard extends React.Component {
     if (cellData.includes(GOLD) && isVisitedCell && isAgentCell) {
       // content.push(<img key="gold" src="/images/gold.gif" alt="Gold" className="fg" />);
       count++;
-      toast.success('Gold is grabbed!'+count, {
-        position: 'top-center',
-        autoClose: 2000,
-      });
     }
     if (cellData.includes(PIT) && !isAgentCell && isVisitedCell) {
       content.push(<img key="pit" src="/images/pit.png" alt="Pit" className="fg" />);
     }
-    if (cellData.includes(STENCH && isVisitedCell)) {
+    if (cellData.includes(STENCH) && !isAgentCell  && isVisitedCell) {
       content.push(<img key="stench" src="/images/stench.png" alt="Stench" className="fg" />);
     }
     if (cellData.includes(BREEZE) && !isAgentCell  && isVisitedCell) {

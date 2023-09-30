@@ -18,7 +18,7 @@
   font-weight: bold;
   color: rgb(246, 246, 240);
   font-size: larger;
-  margin-bottom: 20px;
+
 }
 
 .App-body {
@@ -29,22 +29,20 @@
   justify-content: center;
   font-size: calc(15px + 2vmin);
   color: rgb(246, 246, 240);
-  margin-bottom: 20px;
+  margin: 0 0 0 0;
 }
 
 .board-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 6vh;
 }
 
 .Board {
   margin-right: 15px; 
   margin-left: 15px; 
   max-width: 35%;
-
 }
 
 .MainBoard {
@@ -57,10 +55,6 @@ footer{
   min-height: 3vh;
   background-color: black;
   color: bisque;
-}
-
-body{
-  margin-top: 15px;
 }
 
 /* CSS */

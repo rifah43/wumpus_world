@@ -31,8 +31,9 @@ function App() {
       </header>
 
       <body className="App-body">
-        {clicked ? <div className="board-container glowing-text">
-          <div><AiMove/></div>
+        {clicked ? 
+          <div className="board-container glowing-text">
+            <AiMove />
           </div> : 
           (
             <div>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AI_move_By_Propositional_logic } from './testFolder/wumpus_world/AI_moves';
-import { getTotalNumberOfGold, getTotalNumberOfWumpus, setBoard } from './testFolder/wumpus_world/cave';
+import { getTotalNumberOfGold, getTotalNumberOfWumpus } from './testFolder/wumpus_world/cave';
 import { initializeKnowledgeBase, update } from './testFolder/wumpus_world/knowledgeBase';
 import { newCave } from './testFolder/wumpus_world/indexJS';
 import { ToastContainer, toast } from 'react-toastify';
@@ -101,8 +101,13 @@ class AgentMoves extends Component {
             }
 
             if (currentState.grab) {
+              toast.success('Gold is grabbed!', {
+                position: 'top-center',
+                autoClose: 2000,
+              });
               collectedGold++;
               totalPoint += 1000;
+
             }
             // console.log(this.state.currentPositionY, this.state.currentPositionX, nextPositionY, nextPositionX);
 
@@ -149,13 +154,8 @@ class AgentMoves extends Component {
 
 
     return (
-      <div>
+      <>
         <ToastContainer />
-        <h2>Agent Moves</h2>
-        <p>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
-        <p>Collected Gold: {this.state.collectedGold}</p>
-        <p>Possible Moves: {this.state.moves.length}</p>
-        <p>Total Points: {this.state.totalPoint}</p>
         <div className='Board'><h3>Inspection Board</h3><Board 
               agentPositionY={this.state.prevPositionY} 
               agentPositionX={this.state.prevPositionX} 
@@ -168,8 +168,16 @@ class AgentMoves extends Component {
               agentPositionX={this.state.prevPositionX} 
               nextPositionY={this.state.currentPositionY}
               nextPositionX={this.state.currentPositionX}
-              grab={this.state.moves.grab}/></div>
-      </div>
+              grab={this.state.moves.grab}/>
+        </div>
+        <div className='mr-10'>
+          <h2>Agent Moves</h2>
+          <p>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
+          <p>Collected Gold: {this.state.collectedGold}</p>
+          <p>Possible Moves: {this.state.moves.length}</p>
+          <p>Total Points: {this.state.totalPoint}</p>
+        </div>
+      </>
     );
   }
 }

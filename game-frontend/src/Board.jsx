@@ -14,7 +14,7 @@ class Board extends React.Component {
   }
 
   componentDidMount() {
-    console.log(newCave);
+    //console.log(newCave);
   }
 
   componentDidUpdate(prevProps) {
@@ -83,7 +83,7 @@ class Board extends React.Component {
     if (cellData.includes(PIT) && !isAgentCell) {
       content.push(<img key="pit" src="/images/pit.png" alt="Pit" className="fg" />);
     }
-    if (cellData.includes(STENCH )) {
+    if (cellData.includes(STENCH ) && !isAgentCell ) {
       content.push(<img key="stench" src="/images/stench.png" alt="Stench" className="fg" />);
     }
     if (cellData.includes(BREEZE) && !isAgentCell) {
