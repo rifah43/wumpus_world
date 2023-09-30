@@ -11,7 +11,7 @@ class MainBoard extends React.Component {
     this.state = {
       agentPositionY: props.agentPositionY,
       agentPositionX: props.agentPositionX,
-      visitedCells: [],
+      visitedCells: [`cell-0-0`],
       count:0
     };
   }
@@ -97,7 +97,7 @@ class MainBoard extends React.Component {
     if (cellData.includes(BREEZE) && !isAgentCell  && isVisitedCell) {
       content.push(<img key="breeze" src="/images/breeze.png" alt="Breeze" className="fg"/>);
     }
-    if (!isVisitedCell) {
+    if (!isVisitedCell ) {
       content.push(<img key="closed" src="/images/closed.png" alt="Breeze" className="fg"/>);
     }
 
