@@ -87,16 +87,16 @@ class AgentMoves extends Component {
 							if (isWumpusKilled) totalPoint += 1000;
 						}
 
-						if (currentState.move === 'RIGHT') {
+						if (currentState.move === 'RIGHT' && (i+1) != allMoves) {
 							nextPositionX++;
 							totalPoint--;
-						} else if (currentState.move === 'LEFT') {
+						} else if (currentState.move === 'LEFT' && (i+1) != allMoves) {
 							nextPositionX--;
 							totalPoint--;
-						} else if (currentState.move === 'UP') {
+						} else if (currentState.move === 'UP' && (i+1) != allMoves) {
 							nextPositionY--;
 							totalPoint--;
-						} else if (currentState.move === 'DOWN') {
+						} else if (currentState.move === 'DOWN' && (i+1) != allMoves) {
 							nextPositionY++;
 							totalPoint--;
 						}

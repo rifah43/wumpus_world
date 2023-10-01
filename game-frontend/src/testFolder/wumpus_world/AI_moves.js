@@ -112,15 +112,15 @@ function AI_move_By_Propositional_logic(knowledgeBase, cave, numberOfArrors, cur
         if (temp[1] == true) {
             //if wumpusis killed in adj-room
             knowledgeBase = KnowledgeBase.update(cave, knowledgeBase, move.positionY, move.positionX);
-            direction_Action = Path.addDirection_Action(cave, path)
+            direction_Action = Path.addDirection_Action(cave, path, true)
             direction_Action[direction_Action.length - 2].probabilityOfKilling = move.riskOfWumpus;
         } else{
             knowledgeBase[move.positionY][move.positionX].wumpusProbability = 0;
-            path.pop();
-            direction_Action = Path.addDirection_Action(cave, path)
+            direction_Action = Path.addDirection_Action(cave, path, true)
+            direction_Action.pop();
             const length = direction_Action.length;
             // as agent make a shoot but did not make a move
-            direction_Action[length - 1].action = "SHOOT";
+            // direction_Action[length - 1].action = "SHOOT";
             direction_Action[length - 1].probabilityOfKilling = move.riskOfWumpus;
         }
     }
@@ -128,7 +128,7 @@ function AI_move_By_Propositional_logic(knowledgeBase, cave, numberOfArrors, cur
         // if it's a normal move
         knowledgeBase = KnowledgeBase.update(cave, knowledgeBase, move.positionY, move.positionX);
         let path = Path.generatePath(knowledgeBase, currentPositionY, currentPositionX, move.positionY, move.positionX);
-        direction_Action = Path.addDirection_Action(cave, path)
+        direction_Action = Path.addDirection_Action(cave, path, false)
         const length = direction_Action.length;
         direction_Action[length - 1].riskOfWumpus = move.riskOfWumpus;
         direction_Action[length - 1].riskOfPit = move.riskOfPit;

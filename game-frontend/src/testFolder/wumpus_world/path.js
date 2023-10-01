@@ -60,7 +60,7 @@ function findSafeRooms(knowledgeBase) {
     return caveMatrix;
 }
 
-function addDirection_Action(cave, path) {
+function addDirection_Action(cave, path, makeAShoot) {
     if (path == null || path.length == 0) return;
     let i, length = path.length;
     let moveList = [];
@@ -78,7 +78,7 @@ function addDirection_Action(cave, path) {
         if (cave[currentPositionY][currentPositionX].includes(constants.WUMPUS) || cave[currentPositionY][currentPositionX].includes(constants.PIT)) {
             action = 'DIE';
         }
-        else if (i + 2 == length && cave[path[i + 1][0]][path[i + 1][1]].includes(constants.DEAD_WUMPUS)) action = 'SHOOT';
+        else if (i + 2 == length && makeAShoot == true) action = 'SHOOT';
         else action = "NO_ACTION";
 
         if (i + 1 < length) {
