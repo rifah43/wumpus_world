@@ -31,19 +31,19 @@ class AgentMoves extends Component {
     this.continueUpdating = true; 
   }
 
-  calculatePoint(action, grab) {
-    let points = 0;
-    if (grab) {
-      points += 1000;
-    }
-    if (action === 'SHOOT') {
-      points -= 10;
-    } else if (action !== 'SHOOT') {
-      points -= 1;
-    }
+	calculatePoint(action, grab) {
+		let points = 0;
+		if (grab) {
+			points += 1000;
+		}
+		if (action === 'SHOOT') {
+			points -= 10;
+		} else if (action !== 'SHOOT') {
+			points -= 1;
+		}
 
-    return points;
-  }
+		return points;
+	}
 
   async componentDidMount() {
     try {
@@ -82,35 +82,35 @@ class AgentMoves extends Component {
           for (let i = 0; i < totalMoves; i++) {
             await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for .5 second
 
-            const currentState = allMoves[i];
-            
-            if (currentState.action === 'SHOOT') {
-              numberOfArrows--;
-              totalPoint -= 10;
-              if (isWumpusKilled) totalPoint += 1000;
-            }
+						const currentState = allMoves[i];
 
-            if (currentState.move === 'RIGHT') {
-              nextPositionX++;
-              totalPoint--;
-            } else if (currentState.move === 'LEFT') {
-              nextPositionX--;
-              totalPoint--;
-            } else if (currentState.move === 'UP') {
-              nextPositionY--;
-              totalPoint--;
-            } else if (currentState.move === 'DOWN') {
-              nextPositionY++;
-              totalPoint--;
-            }
+						if (currentState.action === 'SHOOT') {
+							numberOfArrows--;
+							totalPoint -= 10;
+							if (isWumpusKilled) totalPoint += 1000;
+						}
 
-            if (currentState.grab) {
-              toast.success('Gold is grabbed!', {
-                position: 'top-center',
-                autoClose: 2000,
-              });
-              collectedGold++;
-              totalPoint += 1000;
+						if (currentState.move === 'RIGHT' && (i+1) != allMoves) {
+							nextPositionX++;
+							totalPoint--;
+						} else if (currentState.move === 'LEFT' && (i+1) != allMoves) {
+							nextPositionX--;
+							totalPoint--;
+						} else if (currentState.move === 'UP' && (i+1) != allMoves) {
+							nextPositionY--;
+							totalPoint--;
+						} else if (currentState.move === 'DOWN' && (i+1) != allMoves) {
+							nextPositionY++;
+							totalPoint--;
+						}
+
+						if (currentState.grab) {
+							toast.success('Gold is grabbed!', {
+								position: 'top-center',
+								autoClose: 2000,
+							});
+							collectedGold++;
+							totalPoint += 1000;
 
             }
             this.setState({
@@ -153,10 +153,8 @@ class AgentMoves extends Component {
     }
   }
 
-  render() {
-    const possibleActionsText = this.state.possibleActions.map(
-      (action) => `${action.action} - ${action.move}`
-    ).join(', ');
+	render() {
+		const possibleActionsText = this.state.possibleActions.map(action => `${action.action} - ${action.move}`).join(', ');
 
     return (
       <>
