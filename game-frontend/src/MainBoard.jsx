@@ -1,9 +1,7 @@
 import React from 'react';
 import "./Board.css";
 import { AGENT, CAVE_LENGTH, CAVE_WIDTH, WUMPUS, GOLD, PIT, STENCH, BREEZE } from './wumpus_world/constants';
-import { newCave } from './testFolder/wumpus_world/indexJS';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { storeBoard } from './testFolder/wumpus_world/cave';
 
 class MainBoard extends React.Component {
   constructor(props) {
@@ -12,8 +10,9 @@ class MainBoard extends React.Component {
       agentPositionY: props.agentPositionY,
       agentPositionX: props.agentPositionX,
       visitedCells: [`cell-0-0`],
-      count:0
+      board: props.board,
     };
+    // this.board= storeBoard();
   }
 
   componentDidMount() {
@@ -23,7 +22,7 @@ class MainBoard extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.nextPositionY !== this.props.nextPositionY || prevProps.nextPositionX !== this.props.nextPositionX) {
       const { nextPositionY, nextPositionX } = this.props;
-      const visitedCells = this.state.visitedCells.slice(); // Copy the array
+      const visitedCells = this.state.visitedCells.slice(); 
       const visitedCellId = `cell-${nextPositionY}-${nextPositionX}`;
 
       if (!visitedCells.includes(visitedCellId)) {
@@ -40,16 +39,17 @@ class MainBoard extends React.Component {
 
   render() {
     const { agentPositionY, agentPositionX, visitedCells } = this.state;
-    const rows = CAVE_LENGTH;
-    const cols = CAVE_WIDTH;
+    const rows = this.state.board.length;
+    const cols = this.state.board[0].length;
     const cells = [];
 
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         const cellId = `cell-${y}-${x}`;
-        const cellContent = newCave[y][x];
+        const cellContent = this.state.board[y][x];
 
         const isVisitedCell = visitedCells.includes(cellId);
+
 
         cells.push(
           <div
@@ -57,7 +57,7 @@ class MainBoard extends React.Component {
             className={`cell ${y === agentPositionY && x === agentPositionX ? 'agent' : ''}`}
             id={cellId}
           >
-            {this.renderCellContent(cellContent,this.state.count, isVisitedCell,y === agentPositionY && x === agentPositionX)}
+            {this.renderCellContent(cellContent, isVisitedCell,y === agentPositionY && x === agentPositionX)}
           </div>
         );
       }
@@ -70,7 +70,7 @@ class MainBoard extends React.Component {
     );
   }
 
-  renderCellContent(cellData,count ,isVisitedCell, isAgentCell) {
+  renderCellContent(cellData,isVisitedCell, isAgentCell) {
     const content = [];
 
     if (isAgentCell) {
@@ -82,7 +82,6 @@ class MainBoard extends React.Component {
     }
     if (cellData.includes(GOLD) && isVisitedCell && isAgentCell) {
       // content.push(<img key="gold" src="/images/gold.gif" alt="Gold" className="fg" />);
-      count++;
     }
     if (cellData.includes(PIT) && !isAgentCell && isVisitedCell) {
       content.push(<img key="pit" src="/images/pit.png" alt="Pit" className="fg" />);

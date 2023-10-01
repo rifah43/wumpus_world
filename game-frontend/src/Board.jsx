@@ -1,7 +1,7 @@
 import React from 'react';
 import './Board.css'; 
 import { WUMPUS, PIT, GOLD, STENCH, BREEZE, AGENT, CAVE_LENGTH, CAVE_WIDTH } from './wumpus_world/constants';
-import { newCave } from './testFolder/wumpus_world/indexJS';
+import { storeBoard } from './testFolder/wumpus_world/cave';
 
 class Board extends React.Component {
   constructor(props) {
@@ -10,7 +10,9 @@ class Board extends React.Component {
       agentPositionY: props.agentPositionY,
       agentPositionX: props.agentPositionX,
       visitedCells: [],
+      board: props.board,
     };
+    // this.board= storeBoard();
   }
 
   componentDidMount() {
@@ -37,14 +39,15 @@ class Board extends React.Component {
 
   render() {
     const { agentPositionY, agentPositionX, visitedCells } = this.state;
-    const rows = CAVE_LENGTH;
-    const cols = CAVE_WIDTH;
+    const rows = this.state.board.length;
+    const cols = this.state.board[0].length;
+    console.log(rows, cols);
     const cells = [];
 
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         const cellId = `cell-${y}-${x}`;
-        const cellContent = newCave[y][x];
+        const cellContent = this.state.board[y][x];
 
         const isVisitedCell = visitedCells.includes(cellId);
 

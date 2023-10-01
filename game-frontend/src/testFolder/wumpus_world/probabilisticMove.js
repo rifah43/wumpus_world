@@ -88,6 +88,7 @@ function getAllUnvisitedRoomsProbaility(knowledgeBase) {
 
         }
     }
+    console.log(probabilityArray);
     return probabilityArray;
 }
 
@@ -98,5 +99,5 @@ function makeProbabilisticMove(knowledgeBase, cave, numberOfArrow, currentPositi
 }
 
 module.exports = {
-    makeProbabilisticMove
+    makeProbabilisticMove,getAllUnvisitedRoomsProbaility
 }

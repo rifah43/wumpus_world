@@ -1,29 +1,53 @@
-import React , {useState, useEffect} from 'react'
-import { randomCaveGeneration} from './wumpus_world/cave.js'
+import React, { useState } from 'react';
 
-const RandomBoardByUser = () => {
-    const [gold, setGold] = useState(0);
-    const [wumpus, setWumpus] = useState(0);
-    const [pit, setPit] = useState(0);
+const RandomBoardByUser = ({ onUserInput }) => {
+  // Define default values for each field
+  const defaultGold = 2;
+  const defaultWumpus = 3;
+  const defaultPit = 3;
+  const defaultRow = 10;
+  const defaultCol = 10;
 
-    useEffect(() => {
-        if (gold > 0 && wumpus > 0 && pit > 0){
-            randomCaveGeneration(gold, wumpus, pit);
-        }
-    }, [gold, wumpus, pit])
+  // Use useState with default values
+  const [gold, setGold] = useState(defaultGold);
+  const [wumpus, setWumpus] = useState(defaultWumpus);
+  const [pit, setPit] = useState(defaultPit);
+  const [row, setRow] = useState(defaultRow);
+  const [col, setCol] = useState(defaultCol);
+
+  const handleUserInput = () => {
+    // Pass default values if user input is not provided
+    onUserInput({
+      gold: gold || defaultGold,
+      wumpus: wumpus || defaultWumpus,
+      pit: pit || defaultPit,
+      row: row || defaultRow,
+      col: col || defaultCol,
+    });
+  };
 
   return (
     <div className="input-container">
-        <label className="label-18">Number of Gold</label>
-        <input className="input-18" type="number" name="gold" min="1" max="10" onChange={(e) => setGold(e.target.value)} />
-        <br />
-        <label className="label-18">Number of Wumpus</label>
-        <input className="input-18" type="number" name="wumpus" min="1" max="10" onChange={(e) => setWumpus(e.target.value)} />
-        <br />
-        <label className="label-18">Number of Pit</label>
-        <input className="input-18" type="number" name="pit" min="1" max="10" onChange={(e) => setPit(e.target.value)} />
-    </div>
-  )
-}
+      <label className="label-18">Number of Rows</label>
+      <input type="range" id="inputNumber" min="1" max="20" step="1" onChange={(e) => setRow(e.target.value)} />
+      <br />
+      <label className="label-18">Number of Columns</label>
+      <input type="range" id="inputNumber" min="1" max="20" step="1" onChange={(e) => setCol(e.target.value)} />
+      <br />
+      <label className="label-18">Number of Gold</label>
+      <input className="input-18" type="number" name="gold" min="1" max="10" onChange={(e) => setGold(e.target.value)} />
+      <br />
+      <label className="label-18">Number of Wumpus</label>
+      <input className="input-18" type="number" name="wumpus" min="1" max="10" onChange={(e) => setWumpus(e.target.value)} />
+      <br />
+      <label className="label-18">Number of Pit</label>
+      <input className="input-18" type="number" name="pit" min="1" max="10" onChange={(e) => setPit(e.target.value)} />
 
-export default RandomBoardByUser
+      <button className="button-18" onClick={handleUserInput}>
+        Generate
+      </button>
+    </div>
+  );
+};
+
+export default RandomBoardByUser;
