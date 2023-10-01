@@ -9,6 +9,13 @@ import MainBoard from './MainBoard';
 import './AiMove.css'; 
 import ProbabilityBoard from './ProbabilityBoard';
 
+import grabSound from './sounds/grab.wav';
+import gameOver from './sounds/game-over.wav';
+import win from './sounds/win.wav';
+import kill from './sounds/kill.wav';
+import move from './sounds/move.wav';
+import miss from './sounds/miss.wav';
+
 class AgentMoves extends Component {
   constructor(props) {
     super(props);
@@ -29,6 +36,12 @@ class AgentMoves extends Component {
     this.knowledgeBase = null;
     this.hasMounted = false;
     this.continueUpdating = true; 
+    this.grabAudio = new Audio(grabSound);
+    this.gameOver = new Audio(gameOver);
+    this.kill = new Audio(kill);
+    this.win = new Audio(win);
+    this.move = new Audio(move);
+    this.miss = new Audio(miss);
   }
 
 	calculatePoint(action, grab) {
@@ -80,14 +93,20 @@ class AgentMoves extends Component {
           const totalMoves = allMoves.length;
           this.knowledgeBase = updatedKnowledgeBase;
           for (let i = 0; i < totalMoves; i++) {
-            await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for .5 second
+            await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for .5 second
 
 						const currentState = allMoves[i];
 
 						if (currentState.action === 'SHOOT') {
 							numberOfArrows--;
 							totalPoint -= 10;
-							if (isWumpusKilled) totalPoint += 1000;
+							if (isWumpusKilled){ totalPoint += 1000;
+                this.kill.play();
+                toast.success('Wumpus is killed', {
+                  position: 'top-center',
+                  autoClose: 2000,
+                });}
+              else{this.miss.play();}
 						}
 
 						if (currentState.move === 'RIGHT' && (i+1) != allMoves) {
@@ -104,7 +123,9 @@ class AgentMoves extends Component {
 							totalPoint--;
 						}
 
+            this.move.play();
 						if (currentState.grab) {
+              this.grabAudio.play();
 							toast.success('Gold is grabbed!', {
 								position: 'top-center',
 								autoClose: 2000,
@@ -128,25 +149,20 @@ class AgentMoves extends Component {
           }
           console.log(allMoves[totalMoves - 1].action);
           if (collectedGold === maximumGold) {
+            this.win.play();
             this.continueUpdating = false;
             toast.success('You won!', {
               position: 'top-center',
               autoClose: 2000,
             });
           } else if (allMoves[totalMoves - 1].action === 'DIE') {
+            this.gameOver.play();
             this.continueUpdating = false;
             toast.error('Agent died with collected gold', {
               position: 'top-center',
               autoClose: 2000,
             });
-          } else if (allMoves[totalMoves - 1].action === 'SHOOT') {
-            // this.board[nextPositionY][nextPositionX] = null;
-            // setBoard(this.board,this.board.length, this.board[0].length);
-            toast.success('Wumpus is killed', {
-            position: 'top-center',
-            autoClose: 2000,
-          });
-          }
+          } 
         }
     } }catch (err) {
       console.log(err);
