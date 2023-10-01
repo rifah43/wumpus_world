@@ -104,7 +104,7 @@ function AI_move_By_Propositional_logic(knowledgeBase, cave, numberOfArrors, cur
     if (move.action == "SHOOT") {
         let path = Path.generatePath(knowledgeBase, currentPositionY, currentPositionX, move.positionY, move.positionX);
         numberOfArrors--;
-        const temp = killWumpus(cave, path[path.length - 2][0], path[path.length - 2][1], move.positionY, move.positionX);
+        const temp = killWumpus(cave, path[path.length - 1][0], path[path.length - 1][1], move.positionY, move.positionX);
         cave = temp[0];
 
         if(temp[1] != null) wumpusKilled = true;
