@@ -138,8 +138,8 @@ class AgentMoves extends Component {
               autoClose: 2000,
             });
           } else if (allMoves[totalMoves - 1].action === 'SHOOT') {
-            this.board[nextPositionY][nextPositionX] = null;
-            setBoard(this.board,this.board.length, this.board[0].length);
+            // this.board[nextPositionY][nextPositionX] = null;
+            // setBoard(this.board,this.board.length, this.board[0].length);
             toast.success('Wumpus is killed', {
             position: 'top-center',
             autoClose: 2000,

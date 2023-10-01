@@ -1,6 +1,6 @@
 import React from 'react';
 import './Board.css'; 
-import { WUMPUS, PIT, GOLD, STENCH, BREEZE, AGENT, CAVE_LENGTH, CAVE_WIDTH } from './wumpus_world/constants';
+import { WUMPUS, PIT, GOLD, STENCH, BREEZE } from './testFolder/wumpus_world/constants';
 import { storeBoard } from './testFolder/wumpus_world/cave';
 
 class Board extends React.Component {
