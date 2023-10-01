@@ -1,3 +1,7 @@
+body{
+  height: 120vh;
+}
+
 .App {
   text-align: center;
   background-image: url('/public/images/bg.png');
@@ -8,16 +12,17 @@
 }
 
 .App-header {
-  min-height: 15vh;
-  padding-top: 2vh;
-  font-size: calc(35px + 2vmin);
+  padding-top: 1vh;
+  font-size: calc(30px + 2vmin);
   font-weight: bold;
   color: rgb(246, 246, 240);
   font-size: larger;
+  text-align: center
 }
 
 .App-body {
   display: flex;
+  flex: 1;
   flex-direction: row;
   align-items: center;
   justify-content: center;

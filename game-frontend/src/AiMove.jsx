@@ -187,26 +187,41 @@ class AgentMoves extends Component {
             <>
                 <ToastContainer />
                 <div className='d-flex flex-row justify-content-between align-items-center aimove'>
-                    <div>
-                        <h2>Agent Moves</h2>
-                        <p>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
-                        <p>Collected Gold: {this.state.collectedGold}</p>
-                        <p>Number of possible Moves: {this.state.moves.length}</p>
-                        <p>All Moves: {possibleActionsText}</p>
-                        <p>Total Points: {this.state.totalPoint}</p>
-                        <p>Number of Arrows: {this.state.numberOfArrows}</p>
+                    <div className="first-div">
+                        <div className='possible-action'>
+                            <p style={{fontSize: "20px"}}>Possible Actions</p>
+                            <p style={{fontSize: "12px"}}>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
+                            <p style={{fontSize: "12px"}}>Collected Gold: {this.state.collectedGold}</p>
+                            <p style={{fontSize: "12px"}}>Number of possible Moves: {this.state.moves.length}</p>
+                            <p style={{fontSize: "12px"}} >Total Points: {this.state.totalPoint}</p>
+                            <p style={{fontSize: "12px"}}>Number of Arrows: {this.state.numberOfArrows}</p>
+                        </div>
+                        <div className='all-action'>
+                            <p style={{fontSize: "20px"}}>All Actions:</p>
+                            <p style={{fontSize: "12px"}}>{possibleActionsText}<br/></p>
+                        </div>
                     </div>
-                    <div>
-                        <h3>Inspection Board</h3>
-                        <Board agentPositionY={this.state.prevPositionY}
+                    <div className="second-div">
+                        <div className='Board'>
+                            <p style={{fontSize: "20px", fontWeight: "bold", textAlign: "left"}}>Inspection Board</p>
+                            <Board
+                                agentPositionY={this.state.prevPositionY}
                                 agentPositionX={this.state.prevPositionX}
                                 nextPositionY={this.state.currentPositionY}
                                 nextPositionX={this.state.currentPositionX}
                                 grab={this.state.moves.grab}
-                                board={this.board} />
+                                board={this.board}
+                            />
+                        </div>
+                        {this.state.knowledgeBase !== null && (
+                            <div className='PBoard'>
+                                <p style={{fontSize: "20px", color: "white"}}>Probability Board</p>
+                                <ProbabilityBoard knowledgeBase={this.state.knowledgeBase} board={this.board} />
+                            </div>
+                        )}
                     </div>
-                    <div>
-                        <h3>Main Board</h3>
+                    <div className="third-div">
+                    <p style={{fontSize: "20px", fontWeight: "bold", textAlign: "left"}}>Main Board</p>
                         <MainBoard  agentPositionY={this.state.prevPositionY}
                                     agentPositionX={this.state.prevPositionX}
                                     nextPositionY={this.state.currentPositionY}

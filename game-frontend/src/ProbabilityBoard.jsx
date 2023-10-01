@@ -29,8 +29,8 @@ class ProbabilityBoard extends Component {
     });
 
     return (
-      <div className="probability-board">
-        <table>
+      <div className="probability-board"  style={{maxHeight: '50%'}}>
+        <table >
           <tbody>
             {initialBoard.map((row, rowIndex) => (
               <tr key={rowIndex}>
@@ -38,9 +38,8 @@ class ProbabilityBoard extends Component {
                   <td key={colIndex}>
                     {/* Render the probabilities for Wumpus and Pit */}
                     <div>
-                      Wumpus: {cellValues.wumpus}
-                      <hr />
-                      Pit: {cellValues.pit}
+                      W: {cellValues.wumpus}<br/>
+                      P: {cellValues.pit}
                     </div>
                   </td>
                 ))}
