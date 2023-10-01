@@ -3,6 +3,7 @@ import './App.css';
 import CSVParser from './CSVParser';
 import AgentMoves from './AiMove';
 import { useSpring, animated } from 'react-spring';
+import "./Board.css";
 
 import RandomBoardByUser from './RandomBoardByUser';
 import { board_data, getBoard, getCSVBoard, setRowCol, setValues, storeBoard } from './testFolder/wumpus_world/cave';
