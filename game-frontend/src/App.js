@@ -52,9 +52,9 @@ function App() {
 
       <body className="App-body">
         {clicked ? (
-          <div className="board-container glowing-text">
+          // <div className='container glowing-text'>
             <AgentMoves csvdata={csvdata} userInput={userInput} />
-          </div>
+          // </div>
         ) : (
           <div>
             <div className="Csv-container">

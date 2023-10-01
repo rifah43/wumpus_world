@@ -1,32 +1,28 @@
-  .board-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
+.aimove {
+  display: flex; /* Set to flex container */
+  flex-direction: row; /* Arrange items in a row */
+  justify-content: space-between; /* Space items evenly along the main axis */
+  align-items: center; /* Center items along the cross axis */
+}
   
   .Board {
-    margin-right: 15px; 
-    margin-left: 15px; 
-    max-width: 35%;
+   
   }
   
   .MainBoard {
-    margin-right: 15px; 
-    margin-left: 15px; 
-    max-width: 50%;
+    
   }
 
   .PBoard {
     text-align: left;
     background-color: #FFFFFF;
-    height: 20vh;
-    width: 20%;
-    margin-right: 15px; 
-    margin-left: 15px; 
+    /* height: 20vh;
+    width: 20%; */
+    /* margin-right: 15px; 
+    margin-left: 15px;  */
     font-size: 8px;
     font-weight: bold;
-    max-width: 35%;
+    /* max-width: 35%; */
   }
 
   .PBoard td{
@@ -39,10 +35,6 @@
     color: bisque;
   }
   
-  /* body{
-    margin-top: 15px;
-  }
-   */
   .glowing-text {
     font-size: 16px;
     color: rgb(248, 248, 42);

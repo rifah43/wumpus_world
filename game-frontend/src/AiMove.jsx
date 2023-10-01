@@ -179,40 +179,32 @@ class AgentMoves extends Component {
         return (
             <>
                 <ToastContainer />
-                <div>
+                <div className='d-flex flex-row justify-content-between align-items-center aimove'>
                     <div>
-                        <div className='Board'><h3>Inspection Board</h3><Board
-                            agentPositionY={this.state.prevPositionY}
-                            agentPositionX={this.state.prevPositionX}
-                            nextPositionY={this.state.currentPositionY}
-                            nextPositionX={this.state.currentPositionX}
-                            grab={this.state.moves.grab}
-                            board={this.board}
-                        /></div>
-                        {this.state.knowledgeBase !== null && (
-                            <div className='PBoard'>
-                                <h3>Probability Board</h3>
-                                <ProbabilityBoard knowledgeBase={this.state.knowledgeBase} board={this.board} />
-                            </div>
-                        )}
-                    </div>
-
-                    <div className='MainBoard'><h3>Main Board</h3><MainBoard
-                        agentPositionY={this.state.prevPositionY}
-                        agentPositionX={this.state.prevPositionX}
-                        nextPositionY={this.state.currentPositionY}
-                        nextPositionX={this.state.currentPositionX}
-                        grab={this.state.moves.grab}
-                        board={this.board}
-                    />
-                    </div>
-                    <div className='mr-10'>
                         <h2>Agent Moves</h2>
                         <p>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
                         <p>Collected Gold: {this.state.collectedGold}</p>
                         <p>Number of possible Moves: {this.state.moves.length}</p>
                         <p>All Moves: {possibleActionsText}</p>
                         <p>Total Points: {this.state.totalPoint}</p>
+                    </div>
+                    <div>
+                        <h3>Inspection Board</h3>
+                        <Board agentPositionY={this.state.prevPositionY}
+                                agentPositionX={this.state.prevPositionX}
+                                nextPositionY={this.state.currentPositionY}
+                                nextPositionX={this.state.currentPositionX}
+                                grab={this.state.moves.grab}
+                                board={this.board} />
+                    </div>
+                    <div>
+                        <h3>Main Board</h3>
+                        <MainBoard  agentPositionY={this.state.prevPositionY}
+                                    agentPositionX={this.state.prevPositionX}
+                                    nextPositionY={this.state.currentPositionY}
+                                    nextPositionX={this.state.currentPositionX}
+                                    grab={this.state.moves.grab}
+                                    board={this.board}/>
                     </div>
                 </div>
             </>
@@ -221,3 +213,46 @@ class AgentMoves extends Component {
 }
 
 export default AgentMoves;
+
+/*
+<div className='d-flex flex-row justify-content-between align-items-center aimove'>
+                    <div className=''>
+                        <h2>Agent Moves</h2>
+                        <p>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
+                        <p>Collected Gold: {this.state.collectedGold}</p>
+                        <p>Number of possible Moves: {this.state.moves.length}</p>
+                        <p>All Moves: {possibleActionsText}</p>
+                        <p>Total Points: {this.state.totalPoint}</p>
+                    </div>
+                    <div>
+                        <div className='Board'>
+                            <h3>Inspection Board</h3>
+                            <Board
+                                agentPositionY={this.state.prevPositionY}
+                                agentPositionX={this.state.prevPositionX}
+                                nextPositionY={this.state.currentPositionY}
+                                nextPositionX={this.state.currentPositionX}
+                                grab={this.state.moves.grab}
+                                board={this.board}
+                            />
+                        </div>
+                        {this.state.knowledgeBase !== null && (
+                            <div className='PBoard'>
+                                <h3>Probability Board</h3>
+                                <ProbabilityBoard knowledgeBase={this.state.knowledgeBase} board={this.board} />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className='MainBoard'>
+                        <h3>Main Board</h3><MainBoard
+                        agentPositionY={this.state.prevPositionY}
+                        agentPositionX={this.state.prevPositionX}
+                        nextPositionY={this.state.currentPositionY}
+                        nextPositionX={this.state.currentPositionX}
+                        grab={this.state.moves.grab}
+                        board={this.board}
+                    />
+                    </div>
+                </div>
+                */

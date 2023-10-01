@@ -14,10 +14,10 @@ var pit = 0;
         let tempRow = []
         for (let j = 0; j < cave_width; j++) {
             let temp = [];
-            if (cave[i][j]  != WUMPUS && cave[i][j] !=PIT  && isWumpusInAdj(cave,cave_length,cave_width, i, j)) {
+            if (cave[i][j]  !== WUMPUS && cave[i][j] !== PIT  && isWumpusInAdj(cave,cave_length,cave_width, i, j)) {
                 temp.push(STENCH);
             }
-            if (cave[i][j]  != WUMPUS && cave[i][j] !=PIT  && isPitInAdj(cave,cave_length,cave_width, i, j)) {
+            if (cave[i][j]  !==  WUMPUS && cave[i][j] !==PIT  && isPitInAdj(cave,cave_length,cave_width, i, j)) {
                 temp.push(BREEZE);
             }
             if (cave[i][j] === GOLD) {
