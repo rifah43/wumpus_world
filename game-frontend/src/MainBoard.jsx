@@ -16,13 +16,12 @@ class MainBoard extends React.Component {
   }
 
   componentDidMount() {
-    //console.log(newCave);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.nextPositionY !== this.props.nextPositionY || prevProps.nextPositionX !== this.props.nextPositionX) {
       const { nextPositionY, nextPositionX } = this.props;
-      const visitedCells = this.state.visitedCells.slice(); 
+      const visitedCells = this.state.visitedCells.slice();
       const visitedCellId = `cell-${nextPositionY}-${nextPositionX}`;
 
       if (!visitedCells.includes(visitedCellId)) {
@@ -57,7 +56,7 @@ class MainBoard extends React.Component {
             className={`cell ${y === agentPositionY && x === agentPositionX ? 'agent' : ''}`}
             id={cellId}
           >
-            {this.renderCellContent(cellContent, isVisitedCell,y === agentPositionY && x === agentPositionX)}
+            {this.renderCellContent(cellContent, isVisitedCell, y === agentPositionY && x === agentPositionX)}
           </div>
         );
       }
@@ -70,15 +69,15 @@ class MainBoard extends React.Component {
     );
   }
 
-  renderCellContent(cellData,isVisitedCell, isAgentCell) {
+  renderCellContent(cellData, isVisitedCell, isAgentCell) {
     const content = [];
 
     if (isAgentCell) {
       content.push(<img key="agent" src="/images/agent.gif" alt="Agent" className="fg" />);
-    } 
+    }
 
     if (cellData.includes(WUMPUS) && !isAgentCell && isVisitedCell) {
-      content.push(<img key="wumpus" src="/images/wumpus.gif" alt="Wumpus" className="fg"/>);
+      content.push(<img key="wumpus" src="/images/wumpus.gif" alt="Wumpus" className="fg" />);
     }
     if (cellData.includes(GOLD) && isVisitedCell && isAgentCell) {
       // content.push(<img key="gold" src="/images/gold.gif" alt="Gold" className="fg" />);
@@ -86,14 +85,14 @@ class MainBoard extends React.Component {
     if (cellData.includes(PIT) && !isAgentCell && isVisitedCell) {
       content.push(<img key="pit" src="/images/pit.png" alt="Pit" className="fg" />);
     }
-    if (cellData.includes(STENCH) && !isAgentCell  && isVisitedCell) {
+    if (cellData.includes(STENCH) && !isAgentCell && isVisitedCell) {
       content.push(<img key="stench" src="/images/stench.png" alt="Stench" className="fg" />);
     }
-    if (cellData.includes(BREEZE) && !isAgentCell  && isVisitedCell) {
-      content.push(<img key="breeze" src="/images/breeze.png" alt="Breeze" className="fg"/>);
+    if (cellData.includes(BREEZE) && !isAgentCell && isVisitedCell) {
+      content.push(<img key="breeze" src="/images/breeze.png" alt="Breeze" className="fg" />);
     }
-    if (!isVisitedCell ) {
-      content.push(<img key="closed" src="/images/closed.png" alt="Breeze" className="fg"/>);
+    if (!isVisitedCell) {
+      content.push(<img key="closed" src="/images/closed.png" alt="Breeze" className="fg" />);
     }
 
     return content;
