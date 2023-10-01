@@ -32,7 +32,6 @@ class AgentMoves extends Component {
             possibleActions: [],
         };
         this.board = storeBoard();
-        // console.log(this.board);
         this.knowledgeBase = null;
         this.hasMounted = false;
         this.continueUpdating = true;
@@ -59,6 +58,10 @@ class AgentMoves extends Component {
     }
 
     async componentDidMount() {
+        const board = document.querySelector('.board');
+        board.style.gridTemplateColumns = `repeat(${this.board[0].length}, 1fr)`;
+        board.style.gridTemplateRows = `repeat(${this.board.length}, 1fr)`;
+
         try {
             if (!this.hasMounted) {
                 this.hasMounted = true;
@@ -73,6 +76,7 @@ class AgentMoves extends Component {
                 let nextPositionX = 0;
 
                 while (this.continueUpdating) {
+                    console.log(nextPositionY, nextPositionX)
                     const [
                         updatedKnowledgeBase,
                         updatedCave,
@@ -88,12 +92,12 @@ class AgentMoves extends Component {
                     );
 
                     this.knowledgeBase = updatedKnowledgeBase;
-                    console.log(this.knowledgeBase);
+                    // console.log(this.knowledgeBase);
                     this.board = updatedCave;
                     const totalMoves = allMoves.length;
                     this.knowledgeBase = updatedKnowledgeBase;
                     for (let i = 0; i < totalMoves; i++) {
-                        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for .5 second
+                        await new Promise((resolve) => setTimeout(resolve, 1200)); // Wait for .5 second
 
                         const currentState = allMoves[i];
 
@@ -111,7 +115,7 @@ class AgentMoves extends Component {
                             else { this.miss.play(); }
                         }
 
-                        if((i + 1) == allMoves) break;
+                        if ((i + 1) == allMoves) break;
                         if (currentState.move === 'RIGHT') {
                             nextPositionX++;
                             totalPoint--;
@@ -150,7 +154,8 @@ class AgentMoves extends Component {
                             possibleActions: allMoves,
                         });
                     }
-                    console.log(allMoves[totalMoves - 1].action);
+                    console.log(allMoves[totalMoves - 2].action);
+                    console.log(nextPositionY, nextPositionX)
                     if (collectedGold === maximumGold) {
                         this.win.play();
                         this.continueUpdating = false;
@@ -158,10 +163,12 @@ class AgentMoves extends Component {
                             position: 'top-center',
                             autoClose: 2000,
                         });
-                    } else if (allMoves[totalMoves - 1].action === 'DIE') {
+                    }
+                    if (allMoves[totalMoves - 1].action === 'DIE') {
+                        console.log(allMoves[totalMoves - 1],allMoves[totalMoves - 2]);
                         this.gameOver.play();
                         this.continueUpdating = false;
-                        toast.error('Agent died with collected gold', {
+                        toast.error('Agent died with collected gold'+collectedGold, {
                             position: 'top-center',
                             autoClose: 2000,
                         });
@@ -187,6 +194,7 @@ class AgentMoves extends Component {
                         <p>Number of possible Moves: {this.state.moves.length}</p>
                         <p>All Moves: {possibleActionsText}</p>
                         <p>Total Points: {this.state.totalPoint}</p>
+                        <p>Number of Arrows: {this.state.numberOfArrows}</p>
                     </div>
                     <div>
                         <h3>Inspection Board</h3>
