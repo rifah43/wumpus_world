@@ -87,10 +87,10 @@ class Board extends React.Component {
       content.push(<img key="pit" src="/images/pit.png" alt="Pit" className="fg" />);
     }
     if (cellData.includes(STENCH ) && !isAgentCell ) {
-      content.push(<img key="stench" src="/images/stench.png" alt="Stench" className="fg" />);
+      content.push(<img key="stench" src="/images/stench1.png" alt="Stench" className="fg" />);
     }
     if (cellData.includes(BREEZE) && !isAgentCell) {
-      content.push(<img key="breeze" src="/images/breeze.png" alt="Breeze" className="fg"/>);
+      content.push(<img key="breeze" src="/images/breeze2.png" alt="Breeze" className="fg"/>);
     }
 
     return content;
