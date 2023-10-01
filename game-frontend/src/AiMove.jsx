@@ -220,6 +220,7 @@ class AgentMoves extends Component {
                         <p>Number of possible Moves: {this.state.moves.length}</p>
                         <p>All Moves: {possibleActionsText}</p>
                         <p>Total Points: {this.state.totalPoint}</p>
+                        <p>Number of Arrows: {this.state.numberOfArrows}</p>
                     </div>
                 </div>
             </>

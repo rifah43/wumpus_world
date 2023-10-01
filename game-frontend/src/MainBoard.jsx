@@ -15,8 +15,13 @@ class MainBoard extends React.Component {
     // this.board= storeBoard();
   }
 
-  componentDidMount() {
-  }
+
+    componentDidMount() {
+      console.log("componentDidMount is called");
+      const board = document.querySelector('.board1');
+      board.style.gridTemplateColumns = `repeat(${this.state.board[0].length}, 1fr)`;
+      board.style.gridTemplateRows = `repeat(${this.state.board.length}, 1fr)`;
+    }
 
   componentDidUpdate(prevProps) {
     if (prevProps.nextPositionY !== this.props.nextPositionY || prevProps.nextPositionX !== this.props.nextPositionX) {
@@ -63,7 +68,7 @@ class MainBoard extends React.Component {
     }
 
     return (
-      <div className="board">
+      <div className="board1">
         {cells}
       </div>
     );
