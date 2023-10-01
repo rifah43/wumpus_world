@@ -5,7 +5,7 @@ import AgentMoves from './AiMove';
 import { useSpring, animated } from 'react-spring';
 
 import RandomBoardByUser from './RandomBoardByUser';
-import { board_data, getBoard, setRowCol, setValues, storeBoard } from './testFolder/wumpus_world/cave';
+import { board_data, getBoard, getCSVBoard, setRowCol, setValues, storeBoard } from './testFolder/wumpus_world/cave';
 
 function App() {
   const [clicked, setClicked] = useState(false);
@@ -17,7 +17,7 @@ function App() {
     // Update the state with the parsed data
     setCsvUploaded(true);
     setCsvData(data);
-    board_data(data);
+    getCSVBoard(data);
     console.log("csv data", data);
   };
 

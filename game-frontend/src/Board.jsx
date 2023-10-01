@@ -41,7 +41,7 @@ class Board extends React.Component {
     const { agentPositionY, agentPositionX, visitedCells } = this.state;
     const rows = this.state.board.length;
     const cols = this.state.board[0].length;
-    console.log(rows, cols);
+    // console.log(rows, cols);
     const cells = [];
 
     for (let y = 0; y < rows; y++) {

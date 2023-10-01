@@ -34,7 +34,6 @@ var pit = 0;
         }
         newCave.push(tempRow);
     }
-    console.log(newCave);
     if(newCave.length>0) newCave[0][0] = [AGENT];
     return newCave;
 }
@@ -42,15 +41,10 @@ var pit = 0;
  function board_data(data){
     generated_cave= addPerceivation(data, row, col);
     console.log(generated_cave);
+    return generated_cave;
 }
 
  function initialize() {
-    if(generated_cave.length !== 0){
-        console.log("Generated Cave");
-        return generated_cave;
-    }
-    console.log(gold, wumpus, pit, row, col);
-
     return randomCaveGeneration(row, col, gold, wumpus, pit);
 }
 
@@ -116,11 +110,9 @@ var pit = 0;
 }
 
 function randomCaveGeneration(cave_length, cave_width, numberOfGold, numberOfWumpus, numberOfPit) {
-    console.log("Random Cave Generation", cave_length, cave_width, numberOfGold, numberOfWumpus, numberOfPit);
     let newCave = Array.from({ length: cave_length }, () => {
         return Array.from({ length: cave_width }, () => null);
     });
-    console.log(newCave);
     let y, x, maximumItem = cave_length * cave_width;
 
     // Assigning Gold
@@ -165,29 +157,30 @@ function randomCaveGeneration(cave_length, cave_width, numberOfGold, numberOfWum
 
  function getBoard(){
     final_cave= initialize();
-    console.log("final_cave",final_cave);
+}
+
+function getCSVBoard(data){
+    final_cave= board_data(data);
 }
 function storeBoard(){
     return final_cave;
 }
 
  function setValues(g,w,p){
-    console.log(g,w,p);
     gold=g;
     wumpus=w;
     pit=p;
 }
 
  function setRowCol(r,c){
-    console.log(r,c);
     row=r;
     col=c;
 }
 
 function setBoard(board){
-    final_cave=board;
+    final_cave=addPerceivation(board,row,col);
 }
 
 export {
-    printCave,setBoard,board_data,storeBoard, initialize,setRowCol, setValues, isPitInAdj, isWumpusInAdj,getBoard, getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration
+    printCave,setBoard,getCSVBoard,board_data,storeBoard, initialize,setRowCol, setValues, isPitInAdj, isWumpusInAdj,getBoard, getTotalNumberOfGold, getTotalNumberOfWumpus, randomCaveGeneration
 }

@@ -88,7 +88,6 @@ function getAllUnvisitedRoomsProbaility(knowledgeBase) {
 
         }
     }
-    console.log(probabilityArray);
     return probabilityArray;
 }
 

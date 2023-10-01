@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AI_move_By_Propositional_logic } from './testFolder/wumpus_world/AI_moves';
-import { getTotalNumberOfGold, getTotalNumberOfWumpus, storeBoard } from './testFolder/wumpus_world/cave';
+import { getTotalNumberOfGold, getTotalNumberOfWumpus, setBoard, storeBoard } from './testFolder/wumpus_world/cave';
 import { initializeKnowledgeBase, update } from './testFolder/wumpus_world/knowledgeBase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,6 +24,7 @@ class AgentMoves extends Component {
       possibleActions: [],
     };
     this.board = storeBoard();
+    console.log(this.board);
     this.hasMounted = false;
     this.continueUpdating = true; 
   }
@@ -74,8 +75,6 @@ class AgentMoves extends Component {
           knowledgeBase = updatedKnowledgeBase;
           this.board = updatedCave;
           const totalMoves = allMoves.length;
-          this.state.possibleActions = possibleActions;
-          console.log(possibleActions);
 
           for (let i = 0; i < totalMoves; i++) {
             await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for .5 second
@@ -111,8 +110,6 @@ class AgentMoves extends Component {
               totalPoint += 1000;
 
             }
-            // console.log(this.state.currentPositionY, this.state.currentPositionX, nextPositionY, nextPositionX);
-
             this.setState({
               moves: allMoves,
               prevPositionY: this.state.currentPositionY,
@@ -123,12 +120,12 @@ class AgentMoves extends Component {
               numberOfArrows: numberOfArrows,
               knowledgeBase: updatedKnowledgeBase,
               totalPoint: totalPoint,
+              possibleActions: allMoves,
             });
 
           }
-
+          console.log(allMoves[totalMoves - 1].action);
           if (collectedGold === maximumGold) {
-            console.log(collectedGold, maximumGold, totalPoint);
             this.continueUpdating = false;
             toast.success('You won!', {
               position: 'top-center',
@@ -141,12 +138,14 @@ class AgentMoves extends Component {
               autoClose: 2000,
             });
           } else if (allMoves[totalMoves - 1].action === 'SHOOT') {
-          this.continueUpdating = false;
-          toast.success('Wumpus is killed', {
+            this.board[nextPositionY][nextPositionX] = null;
+            setBoard(this.board,this.board.length, this.board[0].length);
+            toast.success('Wumpus is killed', {
             position: 'top-center',
             autoClose: 2000,
           });
           }
+          console.log(this.board);
         }
     } }catch (err) {
       console.log(err);
@@ -154,7 +153,7 @@ class AgentMoves extends Component {
   }
 
   render() {
-
+    const possibleActionsText = this.state.possibleActions.map(action => `${action.action} - ${action.move}`).join(', ');
 
     return (
       <>
@@ -181,6 +180,7 @@ class AgentMoves extends Component {
           <p>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
           <p>Collected Gold: {this.state.collectedGold}</p>
           <p>Number of possible Moves: {this.state.moves.length}</p>
+          <p>All Moves: {possibleActionsText}</p>
           <p>Total Points: {this.state.totalPoint}</p>
         </div>
       </>
