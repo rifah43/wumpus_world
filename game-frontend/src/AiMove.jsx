@@ -8,6 +8,7 @@ import Board from './Board';
 import MainBoard from './MainBoard';
 import './AiMove.css';
 import ProbabilityBoard from './ProbabilityBoard';
+import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa'; // Import Font Awesome icons
 
 import grabSound from './sounds/grab.wav';
 import gameOver from './sounds/game-over.wav';
@@ -30,6 +31,7 @@ class AgentMoves extends Component {
             knowledgeBase: null,
             totalPoint: 100,
             possibleActions: [],
+            isMuted: false,
         };
         this.board = storeBoard();
         this.knowledgeBase = null;
@@ -56,6 +58,18 @@ class AgentMoves extends Component {
 
         return points;
     }
+
+    toggleMute = () => {
+        const audioElements = [this.grabAudio, this.gameOver, this.kill, this.win, this.move, this.miss];
+    
+        audioElements.forEach((audioElement) => {
+          audioElement.muted = !this.state.isMuted;
+        });
+    
+        this.setState((prevState) => ({
+          isMuted: !prevState.isMuted,
+        }));
+      };
 
     async componentDidMount() {
         const board = document.querySelector('.board');
@@ -114,7 +128,7 @@ class AgentMoves extends Component {
                             }
                             else { this.miss.play(); }
                         }
-
+                        this.move.play();
                         if ((i + 1) == allMoves) break;
                         if (currentState.move === 'RIGHT') {
                             nextPositionX++;
@@ -130,7 +144,7 @@ class AgentMoves extends Component {
                             totalPoint--;
                         }
 
-                        this.move.play();
+                        
                         if (currentState.grab) {
                             this.grabAudio.play();
                             toast.success('Gold is grabbed!', {
@@ -214,7 +228,11 @@ class AgentMoves extends Component {
                                     grab={this.state.moves.grab}
                                     board={this.board}/>
                     </div>
-                </div>
+                </div><br />
+                <div><button className="volume-control button-18" onClick={this.toggleMute}>
+            {this.state.isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
+            {this.state.isMuted ? 'Unmute' : 'Mute'}
+          </button></div>
             </>
         );
     }

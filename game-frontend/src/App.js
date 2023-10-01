@@ -3,8 +3,8 @@ import './App.css';
 import CSVParser from './CSVParser';
 import AgentMoves from './AiMove';
 import { useSpring, animated } from 'react-spring';
-import "./Board.css";
-
+// import "./Board.css";
+import { IoLogoGithub } from 'react-icons/io';
 import RandomBoardByUser from './RandomBoardByUser';
 import { board_data, getBoard, getCSVBoard, setRowCol, setValues, storeBoard } from './testFolder/wumpus_world/cave';
 
@@ -47,14 +47,23 @@ function App() {
 
   return (
     <div className="App">
+      
       <header className="App-header">
+      
         <animated.h1 style={props}>Hunt the Wumpus!</animated.h1>
+        
       </header>
 
       <body className="App-body">
+      <a href="https://github.com/rifah43/wumpus_world" target="_blank" rel="noopener noreferrer">
+        <button className="github-button button-19">
+          <IoLogoGithub /> View on GitHub
+        </button>
+      </a>
         {clicked ? (
           // <div className='container glowing-text'>
             <AgentMoves csvdata={csvdata} userInput={userInput} />
+            
           // </div>
         ) : (
           <div>
@@ -71,6 +80,7 @@ function App() {
         )}
       </body>
       <footer>
+        
         ©- Made by Muktadul, Aurchey & Rifah - 2023
       </footer>
     </div>
