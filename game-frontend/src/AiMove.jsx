@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Board from './Board';
 import MainBoard from './MainBoard';
 import './AiMove.css'; 
+import ProbabilityBoard from './ProbabilityBoard';
 
 class AgentMoves extends Component {
   constructor(props) {
@@ -24,7 +25,8 @@ class AgentMoves extends Component {
       possibleActions: [],
     };
     this.board = storeBoard();
-    console.log(this.board);
+    // console.log(this.board);
+    this.knowledgeBase = null;
     this.hasMounted = false;
     this.continueUpdating = true; 
   }
@@ -47,13 +49,13 @@ class AgentMoves extends Component {
     try {
       if (!this.hasMounted) {
         this.hasMounted = true;
-        let knowledgeBase = initializeKnowledgeBase(this.board);
+        this.knowledgeBase = initializeKnowledgeBase(this.board);
         let numberOfArrows = getTotalNumberOfWumpus(this.board, this.board.length, this.board[0].length);
         const maximumGold = getTotalNumberOfGold(this.board,this.board.length, this.board[0].length);
         let collectedGold = 0;
         let totalPoint = 100;
 
-        knowledgeBase = update(this.board, knowledgeBase, 0, 0);
+        this.knowledgeBase = update(this.board, this.knowledgeBase, 0, 0);
         let nextPositionY = 0;
         let nextPositionX = 0;
 
@@ -65,17 +67,18 @@ class AgentMoves extends Component {
             possibleActions,
             isWumpusKilled,
           ] = AI_move_By_Propositional_logic(
-            knowledgeBase,
+            this.knowledgeBase, 
             this.board,
             numberOfArrows,
             nextPositionY,
             nextPositionX
           );
 
-          knowledgeBase = updatedKnowledgeBase;
+          this.knowledgeBase = updatedKnowledgeBase;
+          console.log(this.knowledgeBase);
           this.board = updatedCave;
           const totalMoves = allMoves.length;
-
+          this.knowledgeBase = updatedKnowledgeBase;
           for (let i = 0; i < totalMoves; i++) {
             await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for .5 second
 
@@ -122,7 +125,6 @@ class AgentMoves extends Component {
               totalPoint: totalPoint,
               possibleActions: allMoves,
             });
-
           }
           console.log(allMoves[totalMoves - 1].action);
           if (collectedGold === maximumGold) {
@@ -145,7 +147,6 @@ class AgentMoves extends Component {
             autoClose: 2000,
           });
           }
-          console.log(this.board);
         }
     } }catch (err) {
       console.log(err);
@@ -153,11 +154,15 @@ class AgentMoves extends Component {
   }
 
   render() {
-    const possibleActionsText = this.state.possibleActions.map(action => `${action.action} - ${action.move}`).join(', ');
+    const possibleActionsText = this.state.possibleActions.map(
+      (action) => `${action.action} - ${action.move}`
+    ).join(', ');
 
     return (
       <>
         <ToastContainer />
+        <div>
+        <div>
         <div className='Board'><h3>Inspection Board</h3><Board 
               agentPositionY={this.state.prevPositionY} 
               agentPositionX={this.state.prevPositionX} 
@@ -166,7 +171,15 @@ class AgentMoves extends Component {
               grab={this.state.moves.grab}
               board={this.board}
         /></div>
-        <div className='MainBoard'><h3>Main Board</h3><MainBoard 
+          {this.state.knowledgeBase !== null && (
+            <div className='PBoard'>
+              <h3>Probability Board</h3>
+              <ProbabilityBoard knowledgeBase={this.state.knowledgeBase} board={this.board} />
+            </div>
+          )}
+        </div>
+
+          <div className='MainBoard'><h3>Main Board</h3><MainBoard 
               agentPositionY={this.state.prevPositionY} 
               agentPositionX={this.state.prevPositionX} 
               nextPositionY={this.state.currentPositionY}
@@ -175,13 +188,14 @@ class AgentMoves extends Component {
               board={this.board}
               />
         </div>
-        <div className='mr-10'>
-          <h2>Agent Moves</h2>
-          <p>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
-          <p>Collected Gold: {this.state.collectedGold}</p>
-          <p>Number of possible Moves: {this.state.moves.length}</p>
-          <p>All Moves: {possibleActionsText}</p>
-          <p>Total Points: {this.state.totalPoint}</p>
+          <div className='mr-10'>
+            <h2>Agent Moves</h2>
+            <p>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
+            <p>Collected Gold: {this.state.collectedGold}</p>
+            <p>Number of possible Moves: {this.state.moves.length}</p>
+            <p>All Moves: {possibleActionsText}</p>
+            <p>Total Points: {this.state.totalPoint}</p>
+          </div>
         </div>
       </>
     );

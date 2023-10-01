@@ -16,6 +16,22 @@
     margin-left: 15px; 
     max-width: 50%;
   }
+
+  .PBoard {
+    text-align: left;
+    background-color: #FFFFFF;
+    height: 20vh;
+    width: 20%;
+    margin-right: 15px; 
+    margin-left: 15px; 
+    font-size: 8px;
+    font-weight: bold;
+    max-width: 35%;
+  }
+
+  .PBoard td{
+    border: solid 2px rgb(64, 211, 6);
+  }
   
   footer{
     min-height: 3vh;
