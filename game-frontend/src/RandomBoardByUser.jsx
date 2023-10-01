@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Random.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 const RandomBoardByUser = ({ onUserInput }) => {
   // Define default values for each field
@@ -17,6 +18,11 @@ const RandomBoardByUser = ({ onUserInput }) => {
   const [col, setCol] = useState(defaultCol);
 
   const handleUserInput = () => {
+    console.log('User Input');
+    toast.success('Board Generated!', {
+      position: 'top-center',
+      autoClose: 2000,
+  });
     // Pass default values if user input is not provided
     onUserInput({
       gold: gold || defaultGold,
@@ -25,10 +31,12 @@ const RandomBoardByUser = ({ onUserInput }) => {
       row: row || defaultRow,
       col: col || defaultCol,
     });
+    
   };
 
   return (
     <div className="input-container">
+      <ToastContainer />
       <label className="label-18">Number of Rows</label>
       <input type="range" id="inputNumber" min="1" max="10" step="1" onChange={(e) => setRow(e.target.value)} />
       <span>{row}</span>

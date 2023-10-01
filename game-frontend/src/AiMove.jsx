@@ -93,7 +93,7 @@ class AgentMoves extends Component {
                     const totalMoves = allMoves.length;
                     this.knowledgeBase = updatedKnowledgeBase;
                     for (let i = 0; i < totalMoves; i++) {
-                        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for .5 second
+                        await new Promise((resolve) => setTimeout(resolve, 1200)); // Wait for .5 second
 
                         const currentState = allMoves[i];
 
@@ -161,7 +161,7 @@ class AgentMoves extends Component {
                     } else if (allMoves[totalMoves - 1].action === 'DIE') {
                         this.gameOver.play();
                         this.continueUpdating = false;
-                        toast.error('Agent died with collected gold', {
+                        toast.error('Agent died with collected gold'+collectedGold, {
                             position: 'top-center',
                             autoClose: 2000,
                         });
