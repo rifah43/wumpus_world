@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { AI_move_By_Propositional_logic } from './testFolder/wumpus_world/AI_moves';
-import { getTotalNumberOfGold, getTotalNumberOfWumpus, setBoard, storeBoard } from './testFolder/wumpus_world/cave';
-import { initializeKnowledgeBase, update } from './testFolder/wumpus_world/knowledgeBase';
+import { AI_move_By_Propositional_logic } from './wumpus_world/AI_moves';
+import { getTotalNumberOfGold, getTotalNumberOfWumpus, storeBoard } from './wumpus_world/cave';
+import { initializeKnowledgeBase, update } from './wumpus_world/knowledgeBase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Board from './Board';

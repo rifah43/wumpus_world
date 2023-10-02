@@ -1,7 +1,7 @@
 import React from 'react';
 import Papa from 'papaparse';
-import { board_data} from './testFolder/wumpus_world/cave.js'
-import { GOLD, PIT, WUMPUS } from './testFolder/wumpus_world/constants.js';
+import { board_data} from './wumpus_world/cave.js'
+import { GOLD, PIT, WUMPUS } from './wumpus_world/constants.js';
 
 const CSVParser = ({onDataParsed}) => {
   const textparseascsv = async(text) => {
