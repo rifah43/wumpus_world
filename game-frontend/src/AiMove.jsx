@@ -203,7 +203,7 @@ class AgentMoves extends Component {
                 <div className='d-flex flex-row justify-content-between align-items-center aimove'>
                     <div className="first-div">
                         <div className='possible-action'>
-                            <p style={{fontSize: "20px"}}>Possible Actions</p>
+                            <p style={{fontSize: "20px"}}>Current State</p>
                             <p style={{fontSize: "12px"}}>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
                             <p style={{fontSize: "12px"}}>Collected Gold: {this.state.collectedGold}</p>
                             <p style={{fontSize: "12px"}}>Number of possible Moves: {this.state.moves.length}</p>

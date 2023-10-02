@@ -87,9 +87,9 @@ function killWumpus(cave, positionY, positionX, wumpusPositionY, wumpusPositionX
         cave[actualWumpusPositionY][actualWumpusPositionX] = cave[actualWumpusPositionY][actualWumpusPositionX].filter(item => item !== constants.WUMPUS);
         cave[actualWumpusPositionY][actualWumpusPositionX].push(constants.DEAD_WUMPUS);
         cave = removeStench(cave, actualWumpusPositionY, actualWumpusPositionX);
-
-        if (actualWumpusPositionY == wumpusPositionY && actualWumpusPositionX == wumpusPositionX)
+        if (actualWumpusPositionY == wumpusPositionY && actualWumpusPositionX == wumpusPositionX){
             return [cave, true];
+        }
         else
             return [cave, false]
     }
@@ -98,6 +98,7 @@ function killWumpus(cave, positionY, positionX, wumpusPositionY, wumpusPositionX
 
 function AI_move_By_Propositional_logic(knowledgeBase, cave, numberOfArrors, currentPositionY, currentPositionX) {
     const [move, possibleActions] = ProbabilisticMove.makeProbabilisticMove(knowledgeBase, cave, numberOfArrors, currentPositionY, currentPositionX);
+    if(move == null) return null;
     let direction_Action = []
     let wumpusKilled = false;
 
