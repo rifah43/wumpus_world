@@ -216,24 +216,29 @@ class AgentMoves extends Component {
                         </div>
                     </div>
                     <div className="second-div">
-                        <div className='Board'>
-                            <p style={{fontSize: "20px", fontWeight: "bold", textAlign: "left"}}>Inspection Board</p>
-                            <Board
-                                agentPositionY={this.state.prevPositionY}
-                                agentPositionX={this.state.prevPositionX}
-                                nextPositionY={this.state.currentPositionY}
-                                nextPositionX={this.state.currentPositionX}
-                                grab={this.state.moves.grab}
-                                board={this.board}
-                            />
-                        </div>
-                        {this.state.knowledgeBase !== null && (
-                            <div className='PBoard'>
-                                <p style={{fontSize: "20px", color: "white"}}>Probability Board</p>
-                                <ProbabilityBoard knowledgeBase={this.state.knowledgeBase} board={this.board} />
-                            </div>
-                        )}
-                    </div>
+  <div className="Board">
+    <p style={{ fontSize: "20px", fontWeight: "bold", textAlign: "left" }}>
+      Inspection Board
+    </p>
+    <Board
+      agentPositionY={this.state.prevPositionY}
+      agentPositionX={this.state.prevPositionX}
+      nextPositionY={this.state.currentPositionY}
+      nextPositionX={this.state.currentPositionX}
+      grab={this.state.moves.grab}
+      board={this.board}
+    />
+  </div>
+  <div className="PBoard">
+    <p style={{ fontSize: "20px", color: "white" }}>Probability Board</p>
+    {this.state.knowledgeBase !== null ? (
+      <ProbabilityBoard
+        knowledgeBase={this.state.knowledgeBase}
+        board={this.board}
+      />
+    ) : null}
+  </div>
+</div>
                     <div className="third-div">
                     <p style={{fontSize: "20px", fontWeight: "bold", textAlign: "left"}}>Main Board</p>
                         <MainBoard  agentPositionY={this.state.prevPositionY}

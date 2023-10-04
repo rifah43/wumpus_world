@@ -11,9 +11,9 @@
 .aimove .first-div,
 .aimove .second-div,
 .aimove .third-div {
-  max-height: 100%; /* Each div takes up 100% of the parent's max height */
+  max-height: 100%; 
+  max-width: 100%;/* Each div takes up 100% of the parent's max height */
   overflow-y: auto;/* Enable vertical scrolling if needed */
-  margin-right: 2%;
 }
 
 .aimove > div:nth-child(1) {
@@ -25,13 +25,13 @@
 }
 
 .aimove > div:nth-child(3) {
-  flex: 40%;
+  flex: 50%;
   
 }
 
 .first-div {
-  margin-right: 3%;
-  margin-left: 2%;
+  margin-right: 1%;
+  margin-left: 1%;
 }
 
 .possible-action, .all-action {
@@ -41,21 +41,24 @@
 }
 
 .PBoard {
-    text-align: left;
-    color: #000;
-    font-size: 7px;
-    font-weight: bold;
-  }
+  text-align: left;
+  color: #000;
+  font-size: 10px; /* Increase the font size for readability */
+  font-weight: bold;
+  padding: 3px; /* Add padding to increase the size */
+}
 
-  .PBoard table{
-    max-width: 100%;
-  }
+.PBoard table {
+  width: 70%; /* Set the table width to 100% */
+}
 
-  .PBoard td{
-    background-color: aquamarine ;
-    border: solid 3px rgb(0, 6, 117);
-    
-  }
+.PBoard td {
+  background-color: aquamarine;
+  border: solid 3px rgb(0, 6, 117);
+  padding: 10px; /* Add padding to the table cells */
+  text-align: center; /* Center the content in cells */
+}
+
 
   
   .glowing-text {
