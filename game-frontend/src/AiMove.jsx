@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { AI_move_By_Propositional_logic } from './testFolder/wumpus_world/AI_moves';
-import { getTotalNumberOfGold, getTotalNumberOfWumpus, setBoard, storeBoard } from './testFolder/wumpus_world/cave';
-import { initializeKnowledgeBase, update } from './testFolder/wumpus_world/knowledgeBase';
+import { AI_move_By_Propositional_logic } from './wumpus_world/AI_moves';
+import { getTotalNumberOfGold, getTotalNumberOfWumpus, storeBoard } from './wumpus_world/cave';
+import { initializeKnowledgeBase, update } from './wumpus_world/knowledgeBase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Board from './Board';
@@ -203,7 +203,7 @@ class AgentMoves extends Component {
                 <div className='d-flex flex-row justify-content-between align-items-center aimove'>
                     <div className="first-div">
                         <div className='possible-action'>
-                            <p style={{fontSize: "20px"}}>Possible Actions</p>
+                            <p style={{fontSize: "20px"}}>Current State</p>
                             <p style={{fontSize: "12px"}}>Current Position: ({this.state.currentPositionY}, {this.state.currentPositionX})</p>
                             <p style={{fontSize: "12px"}}>Collected Gold: {this.state.collectedGold}</p>
                             <p style={{fontSize: "12px"}}>Number of possible Moves: {this.state.moves.length}</p>

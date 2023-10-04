@@ -6,14 +6,13 @@ import { useSpring, animated } from 'react-spring';
 // import "./Board.css";
 import { IoLogoGithub } from 'react-icons/io';
 import RandomBoardByUser from './RandomBoardByUser';
-import { board_data, getBoard, getCSVBoard, setRowCol, setValues, storeBoard } from './testFolder/wumpus_world/cave';
+import { getBoard, getCSVBoard, setRowCol, setValues} from './wumpus_world/cave';
 
 function App() {
   const [clicked, setClicked] = useState(false);
   const [csvdata, setCsvData] = useState([]);
   const [userInput, setUserInput] = useState([]); // [x, y, wumpus, pit, gold
   const [csvuploaded, setCsvUploaded] = useState(false);
-  let board;
   const handleDataParsed = async (data) => {
     // Update the state with the parsed data
     setCsvUploaded(true);

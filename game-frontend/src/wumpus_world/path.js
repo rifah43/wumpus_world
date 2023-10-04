@@ -25,7 +25,6 @@ function findPathByBFS(caveMatrix, startPositionY, startPositionX, destinationY,
         // Check if we've reached the end
         if (currentRow === destinationY && currentCol === destinationX) {
             let findPath = path.concat([[currentRow, currentCol]]);
-            findPath.shift()
             return findPath;
         }
 
@@ -53,7 +52,7 @@ function findSafeRooms(knowledgeBase) {
 
     for (i = 0; i < length; i++) {
         for (j = 0; j < width; j++) {
-            if (knowledgeBase[i][j].safe == true) {
+            if (knowledgeBase[i][j].visited == true) {
                 caveMatrix[i][j] = 1;
             }
         }
@@ -61,17 +60,16 @@ function findSafeRooms(knowledgeBase) {
     return caveMatrix;
 }
 
-function addDirection_Action(cave, path) {
+function addDirection_Action(cave, path, makeAShoot) {
+    if (path == null || path.length == 0) return;
     let i, length = path.length;
     let moveList = [];
-    let ylist= [];
-    let xlist= [];
 
     for (i = 0; i < length; i++) {
         let [currentPositionY, currentPositionX] = [path[i][0], path[i][1]];
         let action = null, grab = null, move = null;
 
-        if (i + 1 < length && cave[currentPositionY][currentPositionX].includes(constants.GOLD_IS_GRABBED)) {
+        if (i + 1 == length && cave[currentPositionY][currentPositionX].includes(constants.GOLD)) {
             grab = true;
         }
         else grab = false;
@@ -80,7 +78,7 @@ function addDirection_Action(cave, path) {
         if (cave[currentPositionY][currentPositionX].includes(constants.WUMPUS) || cave[currentPositionY][currentPositionX].includes(constants.PIT)) {
             action = 'DIE';
         }
-        else if (i + 1 < length && cave[path[i + 1][0]][path[i + 1][1]].includes(constants.DEAD_WUMPUS)) action = 'SHOOT';
+        else if (i + 2 == length && makeAShoot == true) action = 'SHOOT';
         else action = "NO_ACTION";
 
         if (i + 1 < length) {
@@ -90,22 +88,19 @@ function addDirection_Action(cave, path) {
             else if (nextMoveX < currentPositionX) move = "LEFT";
             else if (nextMoveX > currentPositionX) move = "RIGHT";
             else move = null;
-            ylist.push(nextMoveY);
-            xlist.push(nextMoveX);
         }
 
-        moveList.push({ move: move, action: action, grab: grab })
-        
+        moveList.push({ move: move, action: action, grab: grab, riskOfWumpus: 0, riskOfPit: 0 })
     }
-    return {moveList, ylist, xlist};
+    return moveList;
 }
 
 
 function generatePath(knowledgeBase, startPositionY, startPositionX, destinationY, destinationX) {
+    knowledgeBase[destinationY][destinationX].visited = true;
     let caveMatrix = findSafeRooms(knowledgeBase);
-    let isKilled = false;
 
-    if (knowledgeBase[destinationY][destinationX].safe == false) {
+    if (knowledgeBase[destinationY][destinationX].wumpusProbability == 1 || knowledgeBase[destinationY][destinationX].pitProbability == 1) {
         caveMatrix[destinationY][destinationX] = 1;     // making is safe so that path can be generated (When Probabilistic decision gona be wrong)
     }
     let path = findPathByBFS(caveMatrix, startPositionY, startPositionX, destinationY, destinationX)
